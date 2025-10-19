@@ -1,0 +1,9 @@
+/* src/pages/Register/Register.scss */
+@use "../../styles/global.scss" as *;
+
+.auth-card { width: 640px; padding: 36px; border-radius: 14px; }
+.password-hints { display:flex; gap:8px; justify-content:center; margin:8px 0 12px; }
+.password-hints small { font-size: 11px; color: #8d8d8d; padding: 2px 6px; border-radius: 6px; }
+.password-hints .ok { color: #7ef2a0; }
+.field-error { color:#ff6b6b; font-size:13px; text-align:left; margin-top:6px; }
+.submit-btn { margin-top: 12px; }

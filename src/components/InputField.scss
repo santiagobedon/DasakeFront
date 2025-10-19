@@ -1,0 +1,17 @@
+/* src/components/InputField.scss */
+.field-row { margin: 12px 0; text-align: left; }
+.field-row label { display: block; font-size: 13px; margin-bottom: 6px; color: #e6e6e6; }
+.field-row input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #2b2b2f;
+  color: #fff;
+  outline: none;
+  font-size: 14px;
+}
+.field-row input::placeholder { color: #9a9a9a; }
+.field-row input:focus { box-shadow: 0 0 8px rgba(0,200,255,0.08); }
+.field-error { margin-top: 6px; color: #ff6b6b; font-size: 13px; }
+.field-row.has-error input { box-shadow: none; }

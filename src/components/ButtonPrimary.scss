@@ -1,0 +1,12 @@
+/* src/components/ButtonPrimary.scss */
+.cm-btn {
+  border-radius: 999px;
+  padding: 10px 26px;
+  background: linear-gradient(90deg, #00c6ff 0%, #8257ff 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6), 0 0 18px rgba(129,87,255,0.12);
+  font-weight: 600;
+}
+.cm-btn[disabled], .cm-btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }

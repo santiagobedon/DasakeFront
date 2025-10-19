@@ -1,0 +1,13 @@
+/* src/components/ModalConfirm.scss */
+.cm-modal-overlay {
+  position: fixed; inset: 0; display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.6); z-index: 9999;
+}
+.cm-modal {
+  width: 520px; max-width: 92%; background: #1b1b1d; padding: 20px; border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+.cm-modal h3 { margin: 0 0 12px; }
+.cm-modal-body { margin-bottom: 12px; color: #ddd; }
+.cm-modal-actions { display:flex; gap: 10px; justify-content:flex-end; }
+.cm-btn-ghost { background: transparent; color: #ddd; border: 1px solid rgba(255,255,255,0.06); }

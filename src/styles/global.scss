@@ -1,0 +1,53 @@
+/* src/styles/global.scss */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body {
+  font-family: "Poppins", sans-serif;
+  background: #060606; /* fondo principal oscuro */
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* auth card base */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  min-height: 100vh;
+  position: relative;
+}
+.auth-card {
+  background: #1b1b1d;
+  border-radius: 20px;
+  padding: 36px;
+  width: 640px;
+  max-width: 96%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  text-align: center;
+}
+.auth-card h1 { font-size: 24px; margin-bottom: 6px; font-weight: 700; }
+.muted { color: #bdbdbd; font-size: 13px; margin-top: 8px; }
+
+/* visually hidden for screen readers */
+.visually-hidden { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* actions wrapper */
+.actions { margin-top: 18px; display:flex; justify-content:center; }
+
+/* input generic styles are in InputField.scss */
+
+/* toastify overrides */
+.Toastify__toast--success { background: linear-gradient(90deg,#00c6ff,#8257ff); color: #fff; }
+.Toastify__toast--error { background: #2b2b2b; border-left: 4px solid #ff6b6b; }
+
+/* brand bottom-left default */
+.brand { position: absolute; left: 24px; bottom: 24px; display:flex; gap:12px; align-items:center; }
+.brand-logo { width:72px; height:72px; border-radius:14px; background: radial-gradient(circle at 30% 30%, #fff3, #8dd2ff 10%, #7a00ff 60%); box-shadow: 0 6px 20px rgba(122,0,255,0.16); }
+.brand-text { font-size:20px; font-weight:700; color:#fff; }
+
+/* small helpers */
+a { color: #44c7ff; text-decoration: none; }

@@ -1,0 +1,8 @@
+/* src/components/Spinner.scss */
+.cm-spinner {
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.08);
+  border-top-color: #dff8ff;
+  animation: cm-spin 1s linear infinite;
+}
+@keyframes cm-spin { to { transform: rotate(360deg); } }
