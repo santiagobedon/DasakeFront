@@ -1,5 +1,4 @@
 // src/components/Spinner.tsx
-import React from "react";
 import "./Spinner.scss";
 
 export default function Spinner({ size = 18 }: { size?: number }) {

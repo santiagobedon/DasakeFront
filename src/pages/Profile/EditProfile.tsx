@@ -37,7 +37,7 @@ export default function EditProfile() {
     try {
       setLoading(true);
       announce("guardando cambios...");
-
+      if (!user) return <p>cargando...</p>;
       const res = await api.put(`/users/${user.id}`, {
         firstName,
         lastName,
