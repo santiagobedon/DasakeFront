@@ -5,7 +5,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import Spinner from "../../components/Spinner";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { emailRegex } from "../../utils/validators";
+import { emailRegex } from "../../utils/validator";
 import "./Login.scss";
 
 export default function Login() {

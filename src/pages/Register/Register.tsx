@@ -4,7 +4,7 @@ import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import Spinner from "../../components/Spinner";
 import { useAuth } from "../../context/AuthContext";
-import { validatePassword, emailRegex } from "../../utils/validators";
+import { validatePassword, emailRegex } from "../../utils/validator";
 import { toast } from "react-toastify";
 import "./Register.scss";
 
