@@ -22,9 +22,12 @@ export default function ResetPassword() {
   useEffect(() => {
     (async () => {
       try {
-        await api.get(`/auth/reset/validate?token=${encodeURIComponent(token)}`);
+        console.log("🔹 token recibido en frontend:", token);
+        const res = await api.get(`/auth/reset/validate?token=${encodeURIComponent(token)}`);
+        console.log("🔹 respuesta del backend al validar token:", res.data);
         setValidToken(true);
-      } catch {
+      } catch (err: any) {
+        console.error("❌ error validando token:", err.response?.data || err.message);
         setValidToken(false);
       }
     })();
@@ -36,44 +39,82 @@ export default function ResetPassword() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) {
-      if (!pass.valid) liveRef.current!.textContent = "Contraseña no cumple requisitos";
-      else liveRef.current!.textContent = "Las contraseñas no coinciden";
+      if (!pass.valid) liveRef.current!.textContent = "contraseña no cumple requisitos";
+      else liveRef.current!.textContent = "las contraseñas no coinciden";
       return;
     }
     setLoading(true);
     try {
-      await Promise.race([api.post("/auth/reset", { token, password }), new Promise((_, rej) => setTimeout(() => rej({ timeout: true }), 3000))]);
+      console.log("🔹 enviando solicitud de cambio de contraseña con token:", token);
+      const res = await api.post("/auth/reset", { token, password });
+      console.log("🔹 respuesta del backend al cambiar contraseña:", res.data);
       setLoading(false);
-      toast.success("Contraseña actualizada");
+      toast.success("contraseña actualizada");
       navigate("/login");
     } catch (err: any) {
       setLoading(false);
+      console.error("❌ error al cambiar contraseña:", err.response?.data || err.message);
       if (err?.response?.status === 400 || err?.response?.status === 410) {
-        liveRef.current!.textContent = "Enlace inválido o caducado";
+        liveRef.current!.textContent = "enlace inválido o caducado";
       } else {
-        liveRef.current!.textContent = "Inténtalo de nuevo más tarde";
-        if (import.meta.env.DEV) console.error(err);
+        liveRef.current!.textContent = "inténtalo de nuevo más tarde";
       }
     }
   }
 
-  if (validToken === null) return <div className="auth-page"><div className="auth-card"><Spinner /></div></div>;
-  if (!validToken) return <div className="auth-page"><div className="auth-card"><h2>Enlace inválido o caducado</h2><a href="/recover">Reenviar enlace</a></div></div>;
+  if (validToken === null)
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <Spinner />
+        </div>
+      </div>
+    );
+
+  if (!validToken)
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <h2>enlace inválido o caducado</h2>
+          <a href="/recover">reenviar enlace</a>
+        </div>
+      </div>
+    );
 
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Recuperar contraseña</h1>
-        <InputField id="new-pass" label="Contraseña" type="password" value={password} onChange={e => { setPassword(e.target.value); liveRef.current!.textContent = ""; }} />
-        <InputField id="confirm-pass" label="Confirmar contraseña" type="password" value={confirm} onChange={e => { setConfirm(e.target.value); liveRef.current!.textContent = ""; }} />
+        <h1>recuperar contraseña</h1>
+        <InputField
+          id="new-pass"
+          label="contraseña"
+          type="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            liveRef.current!.textContent = "";
+          }}
+        />
+        <InputField
+          id="confirm-pass"
+          label="confirmar contraseña"
+          type="password"
+          value={confirm}
+          onChange={(e) => {
+            setConfirm(e.target.value);
+            liveRef.current!.textContent = "";
+          }}
+        />
         <div className="actions">
-          <ButtonPrimary type="submit" disabled={!valid || loading}>{loading ? <Spinner /> : "Actualizar"}</ButtonPrimary>
+          <ButtonPrimary type="submit" disabled={!valid || loading}>
+            {loading ? <Spinner /> : "actualizar"}
+          </ButtonPrimary>
         </div>
         <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
       </form>
       <div className="brand">
         <div className="brand-logo" aria-hidden />
-        <div className="brand-text">DasakeMovies</div>
+        <div className="brand-text">dasakemovies</div>
       </div>
     </div>
   );
