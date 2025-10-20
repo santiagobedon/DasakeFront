@@ -1,5 +1,5 @@
 // src/pages/ResetPassword/ResetPassword.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import Spinner from "../../components/Spinner";
@@ -12,26 +12,11 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") || "";
-  const [validToken, setValidToken] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const liveRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("🔹 token recibido en frontend:", token);
-        const res = await api.get(`/auth/reset/validate?token=${encodeURIComponent(token)}`);
-        console.log("🔹 respuesta del backend al validar token:", res.data);
-        setValidToken(true);
-      } catch (err: any) {
-        console.error("❌ error validando token:", err.response?.data || err.message);
-        setValidToken(false);
-      }
-    })();
-  }, [token]);
 
   const pass = validatePassword(password);
   const valid = pass.valid && password === confirm;
@@ -45,7 +30,7 @@ export default function ResetPassword() {
     }
     setLoading(true);
     try {
-      console.log("🔹 enviando solicitud de cambio de contraseña con token:", token);
+      console.log("🔹 token recibido en frontend:", token);
       const res = await api.post("/auth/reset", { token, password });
       console.log("🔹 respuesta del backend al cambiar contraseña:", res.data);
       setLoading(false);
@@ -61,25 +46,6 @@ export default function ResetPassword() {
       }
     }
   }
-
-  if (validToken === null)
-    return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <Spinner />
-        </div>
-      </div>
-    );
-
-  if (!validToken)
-    return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <h2>enlace inválido o caducado</h2>
-          <a href="/recover">reenviar enlace</a>
-        </div>
-      </div>
-    );
 
   return (
     <div className="auth-page">
