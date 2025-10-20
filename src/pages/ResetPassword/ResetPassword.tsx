@@ -31,7 +31,7 @@ export default function ResetPassword() {
     setLoading(true);
     try {
       console.log("🔹 token recibido en frontend:", token);
-      const res = await api.post("/auth/reset", { token, password });
+      const res = await api.post("/auth/reset", { token, newPassword: password });
       console.log("🔹 respuesta del backend al cambiar contraseña:", res.data);
       setLoading(false);
       toast.success("contraseña actualizada");
