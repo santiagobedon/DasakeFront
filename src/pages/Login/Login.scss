@@ -1,5 +1,5 @@
-/* src/pages/Login/Login.scss (estilos específicos) */
-@use "../../styles/global.scss"as *;
+/* src/pages/Login/Login.scss */
+@use "../../styles/global.scss" as *;
 
 .auth-page {
   display: flex;
@@ -8,22 +8,56 @@
   min-height: 100vh;
   position: relative;
   padding: 32px;
+  background: #121212; // fondo oscuro consistente
 }
 
 .auth-card {
-  width: 680px;
-  max-width: 92%;
+  position: relative; // necesario para posicionar el logo encima
+  width: 680px; // login
+  max-width: 99%;
   background: linear-gradient(#1b1b1d, #1b1b1d);
   border-radius: 18px;
-  padding: 40px;
+  padding: 60px 40px 40px; // espacio extra arriba para el logo
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   text-align: center;
 }
 
-.auth-card h1 { font-size: 26px; margin-bottom: 6px; }
-.muted { color: #bdbdbd; margin-top: 10px; }
+.auth-logo-wrapper {
+  position: absolute;
+  top: -30px; // ajusta según tamaño del logo
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 
-.forgot-link { color: #44c7ff; text-decoration: none; display:inline-block; margin-top:8px; }
+  .auth-logo {
+    height: 60px;
+    width: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(122,0,255,0.16);
+    background: #1b1b1d;
+  }
+}
+
+
+.auth-card h1 { 
+  font-size: 26px; 
+  margin-bottom: 6px; 
+  color: #e0e0e0; // título más visible sobre el fondo oscuro
+}
+
+.muted { 
+  color: #bdbdbd; 
+  margin-top: 10px; 
+}
+
+.forgot-link { 
+  color: #44c7ff; 
+  text-decoration: none; 
+  display:inline-block; 
+  margin-top:8px; 
+  transition: color 0.3s;
+}
+.forgot-link:hover { color: #1fa1ff; }
 
 .brand {
   position: absolute;
@@ -40,4 +74,8 @@
   background: radial-gradient(circle at 30% 30%, #fff3, #8dd2ff 10%, #7a00ff 60%);
   box-shadow: 0 6px 20px rgba(122,0,255,0.16);
 }
-.brand-text { font-weight: 700; font-size: 20px; color: #fff; }
+.brand-text { 
+  font-weight: 700; 
+  font-size: 20px; 
+  color: #fff; 
+}

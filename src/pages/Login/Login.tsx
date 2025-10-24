@@ -7,13 +7,14 @@ import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { emailRegex } from "../../utils/validator";
 import "./Login.scss";
+import logo from "../../assets/images/logo.png";
 
 export default function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(""); // <-- mensaje de error
+  const [errorMsg, setErrorMsg] = useState("");
   const liveRef = useRef<HTMLDivElement | null>(null);
 
   const emailValid = emailRegex.test(email);
@@ -35,7 +36,6 @@ export default function Login() {
     announce("Procesando...");
     try {
       const p = login(email, password);
-      // show spinner at most 3s visually
       await Promise.race([
         p,
         new Promise((_, rej) => setTimeout(() => rej({ timeout: true }), 3000))
@@ -59,44 +59,43 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit} noValidate>
-        <h1>Iniciar sesión</h1>
-
-        <InputField
-          id="login-email"
-          label="Correo electronico"
-          value={email}
-          onChange={e => { setEmail(e.target.value); announce(""); }}
-        />
-
-        <InputField
-          id="login-pass"
-          label="Contraseña"
-          type="password"
-          value={password}
-          onChange={e => { setPassword(e.target.value); announce(""); }}
-        />
-
-        <a className="forgot-link" href="/recover">¿Olvidaste tu contraseña?</a>
-
-        {errorMsg && <div className="field-error" role="alert">{errorMsg}</div>} {/* <-- mensaje visible */}
-
-        <div className="actions">
-          <ButtonPrimary type="submit" disabled={!formValid || loading}>
-            {loading ? <Spinner size={16} /> : "Iniciar sesión"}
-          </ButtonPrimary>
-        </div>
-
-        <p className="muted">¿No tienes cuenta? <a href="/register">Registrarse</a></p>
-
-        <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
-      </form>
-
-      <div className="brand">
-        <div className="brand-logo" aria-hidden />
-        <div className="brand-text">DasakeMovies</div>
+  <div className="auth-page">
+    <form className="auth-card" onSubmit={handleSubmit} noValidate>
+      <div className="auth-logo-wrapper">
+        <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
       </div>
-    </div>
-  );
-}
+
+      <h1>Iniciar sesión</h1>
+
+      <InputField
+        id="login-email"
+        label="Correo electronico"
+        value={email}
+        onChange={e => { setEmail(e.target.value); announce(""); }}
+      />
+
+      <InputField
+        id="login-pass"
+        label="Contraseña"
+        type="password"
+        value={password}
+        onChange={e => { setPassword(e.target.value); announce(""); }}
+      />
+
+      <a className="forgot-link" href="/recover">¿Olvidaste tu contraseña?</a>
+
+      {errorMsg && <div className="field-error" role="alert">{errorMsg}</div>}
+
+      <div className="actions">
+        <ButtonPrimary type="submit" disabled={!formValid || loading}>
+          {loading ? <Spinner size={16} /> : "Iniciar sesión"}
+        </ButtonPrimary>
+      </div>
+
+      <p className="muted">¿No tienes cuenta? <a href="/register">Registrarse</a></p>
+
+      <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
+    </form>
+  </div>
+)}
+
