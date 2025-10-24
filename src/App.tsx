@@ -4,7 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/global.scss";
-import Footer from "./components/footer";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
