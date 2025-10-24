@@ -1,11 +1,10 @@
-// src/services/api.ts
 import axios from "axios";
 
 const API_BASE_URL = "https://dasakemovies.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: false, // backend returns token in JSON body (not cookies)
+  withCredentials: true, // necesario porque el backend usa credenciales
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,4 +19,3 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
-
