@@ -4,9 +4,10 @@ const API_BASE_URL = "https://dasakemovies.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // necesario porque el backend usa credenciales
+  withCredentials: false, // necesario porque el backend usa credenciales
   headers: {
     "Content-Type": "application/json",
+    "Accept": "application/json",
   },
   timeout: 10000, // 10 segundos
 });
