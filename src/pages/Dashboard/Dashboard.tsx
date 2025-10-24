@@ -62,6 +62,7 @@ export default function Dashboard() {
 
             <div className={`menu-dropdown ${menuOpen ? "show" : ""}`}>
               <button disabled>📂 Categorías</button>
+              <button onClick={() => navigate("/aboutus")}>ℹ️ Sobre Nosotros</button>
               <button onClick={handleLogout}>🚪 Cerrar sesión</button>
             </div>
           </div>

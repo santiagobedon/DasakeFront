@@ -77,11 +77,11 @@ export default function Profile() {
           <ButtonPrimary onClick={handleEdit} aria-label="editar perfil">
             Editar perfil
           </ButtonPrimary>
-          <ButtonPrimary onClick={handleBack} aria-label="volver al inicio">
-            Inicio
-          </ButtonPrimary>
           <ButtonPrimary onClick={openModal} aria-label="eliminar cuenta" className="danger-btn">
             Eliminar cuenta
+          </ButtonPrimary>
+          <ButtonPrimary onClick={handleBack} aria-label="volver al inicio">
+            Inicio
           </ButtonPrimary>
         </div>
 

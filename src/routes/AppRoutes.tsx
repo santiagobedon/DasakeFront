@@ -7,6 +7,7 @@ import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Profile from "../pages/Profile/Profile";
 import EditProfile from "../pages/Profile/EditProfile";
+import AboutUs from "../pages/aboutus/AboutUs"; // importamos la nueva página
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function AppRoutes() {
@@ -42,8 +43,18 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* nueva ruta sobre nosotros */}
+      <Route
+        path="/aboutus"
+        element={
+          <ProtectedRoute>
+            <AboutUs />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
-
