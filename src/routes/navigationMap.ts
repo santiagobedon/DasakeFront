@@ -2,25 +2,16 @@
 
 export const navigationMap = {
   public: [
-    { path: "/login", name: "iniciar sesion" },
+    { path: "/login", name: "iniciar sesión" },
     { path: "/register", name: "registrarse" },
     { path: "/recover", name: "recuperar contraseña" },
-    
   ],
+
   private: [
-    { path: "/dashboard", name: "panel principal" },
-    { path: "/dashboard/profile", name: "perfil" },
-    { path: "/aboutus", name: "Sobre Nosotros" },
-  
-    {
-      path: "/dashboard/reports",
-      name: "reportes",
-      children: [
-        { path: "/dashboard/reports/daily", name: "reporte diario" },
-        { path: "/dashboard/reports/weekly", name: "reporte semanal" },
-        { path: "/dashboard/reports/monthly", name: "reporte mensual" },
-      ],
-    },
-    { path: "/dashboard/settings", name: "configuracion" },
+    { path: "/profile", name: "perfil" },
+    { path: "/edit-profile", name: "editar perfil" },
+    { path: "/about-us", name: "sobre nosotros" },
+    { path: "/change-password", name: "cambiar contraseña" },
+    { path: "/dashboard", name: "panel de peliculas" },
   ],
 };

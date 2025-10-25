@@ -67,7 +67,7 @@ export default function EditProfile() {
   if (!user) {
     return (
       <div className="profile-page">
-        <p>Cargando usuario...</p>
+        <p>cargando usuario...</p>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function EditProfile() {
 
         <div className="profile-info">
           <label>
-            firstNames
+            nombres
             <input
               type="text"
               value={firstName}
@@ -87,13 +87,13 @@ export default function EditProfile() {
                 setfirstName(e.target.value);
                 announce("");
               }}
-              placeholder="firstNames"
+              placeholder="nombres"
               required
             />
           </label>
 
           <label>
-            lastName
+            apellidos
             <input
               type="text"
               value={lastName}
@@ -101,13 +101,13 @@ export default function EditProfile() {
                 setlastName(e.target.value);
                 announce("");
               }}
-              placeholder="Apellidos"
+              placeholder="apellidos"
               required
             />
           </label>
 
           <label>
-            age
+            edad
             <input
               type="number"
               value={age}
@@ -116,7 +116,7 @@ export default function EditProfile() {
                 setage(e.target.value);
                 announce("");
               }}
-              placeholder="Edad"
+              placeholder="edad"
               required
             />
           </label>
@@ -130,15 +130,35 @@ export default function EditProfile() {
                 setEmail(e.target.value);
                 announce("");
               }}
-              placeholder="Correo electrónico"
+              placeholder="correo electrónico"
               required
             />
           </label>
         </div>
 
-        <ButtonPrimary type="submit" disabled={!valid || loading}>
-          {loading ? <Spinner size={16} /> : "guardar cambios"}
-        </ButtonPrimary>
+        <div className="profile-buttons">
+          <ButtonPrimary type="submit" disabled={!valid || loading}>
+            {loading ? <Spinner size={16} /> : "guardar cambios"}
+          </ButtonPrimary>
+
+          <ButtonPrimary
+            type="button"
+            onClick={() => navigate("/change-password")}
+          >
+            cambiar contraseña
+          </ButtonPrimary>
+
+          <ButtonPrimary
+            type="button"
+            onClick={() => navigate("/profile")}
+            style={{
+              backgroundColor: "#444",
+              color: "white",
+            }}
+          >
+            volver al perfil
+          </ButtonPrimary>
+        </div>
 
         <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
       </form>

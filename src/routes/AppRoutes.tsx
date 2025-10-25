@@ -9,7 +9,7 @@ import Profile from "../pages/Profile/Profile";
 import EditProfile from "../pages/Profile/EditProfile";
 import AboutUs from "../pages/aboutus/AboutUs"; // importamos la nueva página
 import ProtectedRoute from "../components/ProtectedRoute";
-
+import ChangePassword from "../pages/Change-password/Change-Password";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -18,6 +18,8 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/recover" element={<Recover />} />
       <Route path="/reset" element={<ResetPassword />} />
+      <Route path="/change-password" element={<ChangePassword />} />
+
 
       <Route
         path="/dashboard"

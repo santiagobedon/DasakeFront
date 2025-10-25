@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { navigationMap } from "../routes/navigationMap";
+import { useAuth } from "../context/AuthContext";
 
 type Route = {
   path: string;
@@ -7,11 +8,9 @@ type Route = {
   children?: { path: string; name: string }[];
 };
 
-interface FooterProps {
-  isAuthenticated: boolean;
-}
-
-export default function Footer({ isAuthenticated }: FooterProps) {
+export default function Footer() {
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
   const routes: Route[] = isAuthenticated
     ? (navigationMap.private as Route[])
     : (navigationMap.public as Route[]);
@@ -19,7 +18,7 @@ export default function Footer({ isAuthenticated }: FooterProps) {
   return (
     <footer className="fixed bottom-0 left-0 w-full bg-gray-900 text-white py-2 shadow-md z-50">
       <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-wrap justify-center gap-4 text-sm">
+        <div className="flex flex-wrap justify-center gap-3 text-sm">
           {routes.map((route) => (
             <div key={route.path}>
               <Link
@@ -28,6 +27,7 @@ export default function Footer({ isAuthenticated }: FooterProps) {
               >
                 {route.name}
               </Link>
+
               {route.children && (
                 <div className="text-xs mt-1 text-gray-400">
                   {route.children.map((sub) => (
@@ -46,7 +46,7 @@ export default function Footer({ isAuthenticated }: FooterProps) {
         </div>
 
         <p className="text-xs text-gray-500 mt-2">
-          © {new Date().getFullYear()} DasakewareMovies
+          © {new Date().getFullYear()} dasakewaremovies
         </p>
       </div>
     </footer>
