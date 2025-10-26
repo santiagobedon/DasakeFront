@@ -9,8 +9,8 @@ export const navigationMap = {
 
   private: [
     { path: "/profile", name: "perfil" },
-    { path: "/edit-profile", name: "editar perfil" },
-    { path: "/about-us", name: "sobre nosotros" },
+    { path: "/profile/edit", name: "editar perfil" },
+    { path: "/aboutus", name: "sobre nosotros" },
     { path: "/change-password", name: "cambiar contraseña" },
     { path: "/dashboard", name: "panel de peliculas" },
   ],

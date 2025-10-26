@@ -1,4 +1,3 @@
-// src/pages/ResetPassword/ResetPassword.tsx
 import React, { useRef, useState } from "react";
 import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
@@ -71,6 +70,15 @@ export default function ResetPassword() {
             liveRef.current!.textContent = "";
           }}
         />
+
+        {/* hints de validacion */}
+        <div className="password-hints">
+          <small className={pass.length ? "ok" : ""}>≥ 8 caracteres/letras</small>
+          <small className={pass.upper ? "ok" : ""}>1 mayúscula</small>
+          <small className={pass.num ? "ok" : ""}>1 número</small>
+          <small className={pass.special ? "ok" : ""}>1 carácter especial</small>
+        </div>
+
         <div className="actions">
           <ButtonPrimary type="submit" disabled={!valid || loading}>
             {loading ? <Spinner /> : "actualizar"}

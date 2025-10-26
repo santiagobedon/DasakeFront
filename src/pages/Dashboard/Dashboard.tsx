@@ -20,13 +20,18 @@ interface Movie {
   }[];
 }
 
+type GroupedMovies = Record<string, Movie[]>;
+
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [groupedMovies, setGroupedMovies] = useState<GroupedMovies>({});
+  const [favorites, setFavorites] = useState<number[]>([]); // ids de favoritos
   const [menuOpen, setMenuOpen] = useState(false);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number | null>(null);
@@ -38,6 +43,9 @@ export default function Dashboard() {
     "cine",
     "musica",
     "tecnologia",
+    "urbano",
+    "gastronomia",
+    "otros",
   ];
 
   const handleLogout = () => {
@@ -49,28 +57,77 @@ export default function Dashboard() {
     navigate("/profile");
   };
 
+  // cargar peliculas
   useEffect(() => {
     async function fetchMovies() {
       try {
         const res = await api.get("/movies");
-        setMovies(res.data);
+
+        if (Array.isArray(res.data)) {
+          const grouped = res.data.reduce((acc: Record<string, Movie[]>, movie: Movie) => {
+            const cat = movie.category ?? "otros";
+            if (!acc[cat]) acc[cat] = [];
+            acc[cat].push(movie);
+            return acc;
+          }, {});
+          setGroupedMovies(grouped);
+        } else {
+          setGroupedMovies(res.data);
+        }
       } catch (err) {
-        if (import.meta.env.DEV) console.error("error al cargar peliculas:", err);
+        console.error("❌ error al cargar peliculas:", err);
       }
     }
     fetchMovies();
   }, []);
 
-  const groupedMovies = movies.reduce<Record<string, Movie[]>>((acc, m) => {
-    const cat = (m.category || "sin-categoria").toLowerCase();
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(m);
-    return acc;
-  }, {});
+  // cargar favoritos del usuario
+    useEffect(() => {
+      const userId = user?.id;
+      if (!userId) return;
+  
+      async function fetchFavorites() {
+        try {
+          const res = await api.get(`/favorites?userId=${userId}`);
+          const favIds = Array.isArray(res.data) ? res.data.map((f: any) => f.video_id) : [];
+          setFavorites(favIds);
+        } catch (err) {
+          console.error("❌ error al cargar favoritos:", err);
+        }
+      }
+  
+      fetchFavorites();
+    }, [user]);
 
-  const displayedGroups: Record<string, Movie[]> =
-    selectedCategory && groupedMovies[selectedCategory]
+  const toggleFavorite = async (movie: Movie) => {
+    if (!user?.id) return;
+
+    const isFav = favorites.includes(movie.id);
+
+    try {
+      if (isFav) {
+        await api.delete("/favorites/remove", { data: { userId: user.id, videoId: movie.id } });
+        setFavorites((prev) => prev.filter((id) => id !== movie.id));
+      } else {
+        await api.post("/favorites/add", {
+          userId: user.id,
+          videoId: movie.id,
+          videoUrl: movie.url,
+          videoImage: movie.image,
+        });
+        setFavorites((prev) => [...prev, movie.id]);
+      }
+    } catch (err) {
+      console.error("❌ error al actualizar favorito:", err);
+    }
+  };
+
+  // preparar grupos a mostrar
+  const displayedGroups =
+    selectedCategory && selectedCategory !== "favoritos" && groupedMovies[selectedCategory]
       ? { [selectedCategory]: groupedMovies[selectedCategory] }
+      : selectedCategory === "favoritos"
+      ? { favoritos: Object.values(groupedMovies).flat().filter((m) => favorites.includes(m.id)) }
       : groupedMovies;
 
   const handleSelectCategory = (cat: string | null) => {
@@ -102,8 +159,7 @@ export default function Dashboard() {
 
   const handleMouseLeaveMenu = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    // mantener abierto por 2 segundos
-    timerRef.current = setTimeout(() => {
+    timerRef.current = window.setTimeout(() => {
       setMenuOpen(false);
       setShowCategories(false);
     }, 2000);
@@ -152,6 +208,12 @@ export default function Dashboard() {
                     >
                       ver todo
                     </button>
+                    <button
+                      className={selectedCategory === "favoritos" ? "active" : ""}
+                      onClick={() => handleSelectCategory("favoritos")}
+                    >
+                      ⭐ favoritos
+                    </button>
                     {availableCategories.map((cat) => (
                       <button
                         key={cat}
@@ -174,7 +236,9 @@ export default function Dashboard() {
         <div className="movies-scroll" role="region" aria-label="contenedor de películas">
           {Object.keys(displayedGroups).length === 0 ? (
             <div className="movies-placeholder">
-              <p role="alert" aria-live="polite">cargando peliculas...</p>
+              <p role="alert" aria-live="polite">
+                cargando peliculas...
+              </p>
             </div>
           ) : (
             Object.entries(displayedGroups).map(([cat, catMovies]) => (
@@ -186,6 +250,8 @@ export default function Dashboard() {
                       movie.video_files?.find(
                         (file) => file.quality === "hd" || file.quality === "sd"
                       )?.link ?? movie.url ?? "";
+
+                    const isFav = favorites.includes(movie.id);
 
                     return (
                       <div key={movie.id} className="movie-card">
@@ -204,6 +270,12 @@ export default function Dashboard() {
                           >
                             ver en pexels
                           </a>
+                          <button
+                            className={`favorite-btn ${isFav ? "favorited" : ""}`}
+                            onClick={() => toggleFavorite(movie)}
+                          >
+                            {isFav ? "⭐" : "☆"}
+                          </button>
                         </div>
                       </div>
                     );
