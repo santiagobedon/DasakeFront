@@ -1,4 +1,3 @@
-// src/routes/AppRoutes.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
@@ -7,20 +6,33 @@ import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Profile from "../pages/Profile/Profile";
 import EditProfile from "../pages/Profile/EditProfile";
-import AboutUs from "../pages/aboutus/AboutUs"; // importamos la nueva página
+import AboutUs from "../pages/aboutus/AboutUs"; // About Us page
 import ProtectedRoute from "../components/ProtectedRoute";
 import ChangePassword from "../pages/Change-password/Change-Password";
+
+/**
+ * AppRoutes component
+ *
+ * Defines all routes of the application.
+ * - Redirects root "/" and unknown paths to /login.
+ * - Includes protected routes for authenticated users.
+ * - Separates public routes (login, register, recover/reset password).
+ * - Includes a new About Us page route.
+ */
 export default function AppRoutes() {
   return (
     <Routes>
+      {/* Redirect root to login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
+
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/recover" element={<Recover />} />
       <Route path="/reset" element={<ResetPassword />} />
       <Route path="/change-password" element={<ChangePassword />} />
 
-
+      {/* Protected routes */}
       <Route
         path="/dashboard"
         element={
@@ -46,7 +58,7 @@ export default function AppRoutes() {
         }
       />
 
-      {/* nueva ruta sobre nosotros */}
+      {/* About Us page */}
       <Route
         path="/aboutus"
         element={
@@ -56,6 +68,7 @@ export default function AppRoutes() {
         }
       />
 
+      {/* Catch-all redirects unknown routes to login */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

@@ -7,6 +7,18 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import Spinner from "../../components/Spinner";
 import "./Profile.scss";
 
+/**
+ * Profile component
+ *
+ * Displays the logged-in user's profile information and allows the user
+ * to edit their profile, delete their account, or navigate back to the dashboard.
+ *
+ * Features:
+ * - Shows user's name, last name, age, and email.
+ * - Edit profile button navigates to the edit page.
+ * - Delete account requires confirmation by typing "ELIMINAR" and entering password.
+ * - Accessible feedback via aria-live regions.
+ */
 export default function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +47,11 @@ export default function Profile() {
 
   const closeModal = () => setModalOpen(false);
 
+  /**
+   * Handles account deletion
+   * Validates confirmation text and password, sends delete request,
+   * shows appropriate toast messages, and logs out user on success.
+   */
   const handleDelete = async () => {
     if (confirmText !== "ELIMINAR") {
       toast.error('debes escribir "ELIMINAR" para continuar');

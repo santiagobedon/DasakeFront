@@ -1,4 +1,3 @@
-// src/pages/Register/Register.tsx
 import React, { useRef, useState } from "react";
 import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
@@ -9,6 +8,19 @@ import { toast } from "react-toastify";
 import "./Register.scss";
 import logo from "../../assets/images/logo.png";
 
+/**
+ * Register component
+ *
+ * Allows new users to create an account by providing first name, last name,
+ * age, email, and password. Validates all fields before submission and provides
+ * live accessibility feedback via aria-live region.
+ *
+ * Features:
+ * - Validates age (≥ 13), email format, and password strength.
+ * - Password hints show live feedback on password requirements.
+ * - Confirm password must match the password field.
+ * - Displays toast messages on success or errors.
+ */
 export default function Register() {
   const { signup } = useAuth();
   const [firstName, setfirstName] = useState("");
@@ -32,13 +44,26 @@ export default function Register() {
     pass.valid &&
     confirmMatch;
 
+  /**
+   * Sets live feedback message for accessibility
+   * @param msg Message to announce
+   */
   function announce(msg: string) {
     if (liveRef.current) liveRef.current.textContent = msg;
   }
 
+  /**
+   * Handles form submission
+   * - Validates all inputs
+   * - Calls signup function from AuthContext
+   * - Shows success toast and redirects to login
+   * - Shows error messages if signup fails
+   * @param e Form event
+   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const ageNumber = Number(age);
+
     if (!firstName.trim() || !lastName.trim() || !ageValid || !emailValid || !pass.valid || !confirmMatch) {
       announce("Corrige los campos antes de continuar.");
       return;

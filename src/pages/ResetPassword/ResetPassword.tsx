@@ -8,6 +8,18 @@ import { toast } from "react-toastify";
 import "./ResetPassword.scss";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
+/**
+ * ResetPassword component
+ *
+ * Allows users to reset their password using a token received via email.
+ * Validates the new password strength and ensures it matches the confirmation field.
+ *
+ * Features:
+ * - Password validation hints displayed live.
+ * - Provides accessible live feedback via aria-live region.
+ * - Sends token and new password to backend for updating.
+ * - Displays toast messages for success and error cases.
+ */
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") || "";
@@ -20,6 +32,13 @@ export default function ResetPassword() {
   const pass = validatePassword(password);
   const valid = pass.valid && password === confirm;
 
+  /**
+   * Handles form submission to reset password.
+   * - Validates password and confirmation
+   * - Sends POST request to /auth/reset with token and new password
+   * - Provides live feedback on errors
+   * @param e Form event
+   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) {
@@ -71,7 +90,7 @@ export default function ResetPassword() {
           }}
         />
 
-        {/* hints de validacion */}
+        {/* password validation hints */}
         <div className="password-hints">
           <small className={pass.length ? "ok" : ""}>≥ 8 caracteres/letras</small>
           <small className={pass.upper ? "ok" : ""}>1 mayúscula</small>

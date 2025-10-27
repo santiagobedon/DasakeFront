@@ -1,5 +1,12 @@
-// src/routes/navigationMap.ts
-
+/**
+ * navigationMap
+ *
+ * Maps application routes to their display names.
+ * - `public`: routes accessible without authentication.
+ * - `private`: routes that require authentication.
+ * 
+ * All display names are kept in Spanish as per UI requirements.
+ */
 export const navigationMap = {
   public: [
     { path: "/login", name: "iniciar sesión" },
@@ -15,3 +22,4 @@ export const navigationMap = {
     { path: "/dashboard", name: "panel de peliculas" },
   ],
 };
+

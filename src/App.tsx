@@ -1,4 +1,13 @@
-// src/App.tsx
+/**
+ * App
+ *
+ * Root component of the DasakeMovies frontend.
+ * - Wraps the app with `AuthProvider` to provide authentication context.
+ * - Renders `AppRoutes` for routing between pages.
+ * - Includes a persistent `Footer`.
+ * - Displays toast notifications using `ToastContainer`.
+ */
+
 import AppRoutes from "./routes/AppRoutes";
 import { AuthProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";

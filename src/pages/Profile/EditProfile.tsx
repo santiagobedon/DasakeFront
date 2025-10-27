@@ -9,6 +9,13 @@ import "./Profile.scss";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * EditProfile component
+ * 
+ * Allows the user to edit their profile information including first name, last name, age, and email.
+ * Provides real-time validation and accessible feedback via aria-live regions.
+ * Contains navigation buttons to change password and return to profile.
+ */
 export default function EditProfile() {
   const { user, refreshMe } = useAuth();
   const navigate = useNavigate();
@@ -26,10 +33,18 @@ export default function EditProfile() {
     Number(age) >= 13 &&
     emailRegex.test(email);
 
+  /**
+   * Updates the aria-live region with a message
+   * @param msg - message to announce to screen readers
+   */
   function announce(msg: string) {
     if (liveRef.current) liveRef.current.textContent = msg;
   }
 
+  /**
+   * Handles saving profile changes
+   * @param e - form submission event
+   */
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!valid) return announce("corrige los campos antes de continuar");

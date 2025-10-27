@@ -1,4 +1,3 @@
-// src/pages/Login/Login.tsx
 import React, { useRef, useState } from "react";
 import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
@@ -9,6 +8,14 @@ import { emailRegex } from "../../utils/validator";
 import "./Login.scss";
 import logo from "../../assets/images/logo.png";
 
+/**
+ * Login component
+ *
+ * Handles user login with email and password.
+ * Provides real-time validation, accessible feedback via aria-live, 
+ * and handles various error states such as incorrect credentials,
+ * temporary account lock, and too many attempts.
+ */
 export default function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
@@ -21,11 +28,19 @@ export default function Login() {
   const passValid = password.length > 0;
   const formValid = emailValid && passValid;
 
+  /**
+   * Updates the aria-live region with a message and sets error state
+   * @param msg - message to announce to screen readers
+   */
   function announce(msg: string) {
     setErrorMsg(msg);
     if (liveRef.current) liveRef.current.textContent = msg;
   }
 
+  /**
+   * Handles form submission for login
+   * @param e - form submission event
+   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!formValid) {
@@ -59,43 +74,43 @@ export default function Login() {
   }
 
   return (
-  <div className="auth-page">
-    <form className="auth-card" onSubmit={handleSubmit} noValidate>
-      <div className="auth-logo-wrapper">
-        <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
-      </div>
+    <div className="auth-page">
+      <form className="auth-card" onSubmit={handleSubmit} noValidate>
+        <div className="auth-logo-wrapper">
+          <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
+        </div>
 
-      <h1>Iniciar sesión</h1>
+        <h1>Iniciar sesión</h1>
 
-      <InputField
-        id="login-email"
-        label="Correo electronico"
-        value={email}
-        onChange={e => { setEmail(e.target.value); announce(""); }}
-      />
+        <InputField
+          id="login-email"
+          label="Correo electronico"
+          value={email}
+          onChange={e => { setEmail(e.target.value); announce(""); }}
+        />
 
-      <InputField
-        id="login-pass"
-        label="Contraseña"
-        type="password"
-        value={password}
-        onChange={e => { setPassword(e.target.value); announce(""); }}
-      />
+        <InputField
+          id="login-pass"
+          label="Contraseña"
+          type="password"
+          value={password}
+          onChange={e => { setPassword(e.target.value); announce(""); }}
+        />
 
-      <a className="forgot-link" href="/recover">¿Olvidaste tu contraseña?</a>
+        <a className="forgot-link" href="/recover">¿Olvidaste tu contraseña?</a>
 
-      {errorMsg && <div className="field-error" role="alert">{errorMsg}</div>}
+        {errorMsg && <div className="field-error" role="alert">{errorMsg}</div>}
 
-      <div className="actions">
-        <ButtonPrimary type="submit" disabled={!formValid || loading}>
-          {loading ? <Spinner size={16} /> : "Iniciar sesión"}
-        </ButtonPrimary>
-      </div>
+        <div className="actions">
+          <ButtonPrimary type="submit" disabled={!formValid || loading}>
+            {loading ? <Spinner size={16} /> : "Iniciar sesión"}
+          </ButtonPrimary>
+        </div>
 
-      <p className="muted">¿No tienes cuenta? <a href="/register">Registrarse</a></p>
+        <p className="muted">¿No tienes cuenta? <a href="/register">Registrarse</a></p>
 
-      <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
-    </form>
-  </div>
-)}
-
+        <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
+      </form>
+    </div>
+  );
+}
