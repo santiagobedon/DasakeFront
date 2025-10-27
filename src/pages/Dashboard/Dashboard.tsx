@@ -1,3 +1,4 @@
+// src/pages/dashboard/Dashboard.tsx
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,13 @@ interface Movie {
 
 type GroupedMovies = Record<string, Movie[]>;
 
+/**
+ * Dashboard page
+ *
+ * Displays movies grouped by category.
+ * Allows the user to view, filter by category, and mark favorites.
+ * Includes a dropdown menu for navigation and logout.
+ */
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +37,7 @@ export default function Dashboard() {
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [groupedMovies, setGroupedMovies] = useState<GroupedMovies>({});
-  const [favorites, setFavorites] = useState<number[]>([]); // ids de favoritos
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -57,7 +65,7 @@ export default function Dashboard() {
     navigate("/profile");
   };
 
-  // cargar peliculas
+  // fetch movies from API
   useEffect(() => {
     async function fetchMovies() {
       try {
@@ -75,33 +83,32 @@ export default function Dashboard() {
           setGroupedMovies(res.data);
         }
       } catch (err) {
-        console.error("❌ error al cargar peliculas:", err);
+        console.error("❌ error fetching movies:", err);
       }
     }
     fetchMovies();
   }, []);
 
-  // cargar favoritos del usuario
-    useEffect(() => {
-      const userId = user?.id;
-      if (!userId) return;
-  
-      async function fetchFavorites() {
-        try {
-          const res = await api.get(`/favorites?userId=${userId}`);
-          const favIds = Array.isArray(res.data) ? res.data.map((f: any) => f.video_id) : [];
-          setFavorites(favIds);
-        } catch (err) {
-          console.error("❌ error al cargar favoritos:", err);
-        }
+  // fetch user favorites
+  useEffect(() => {
+    const userId = user?.id;
+    if (!userId) return;
+
+    async function fetchFavorites() {
+      try {
+        const res = await api.get(`/favorites?userId=${userId}`);
+        const favIds = Array.isArray(res.data) ? res.data.map((f: any) => f.video_id) : [];
+        setFavorites(favIds);
+      } catch (err) {
+        console.error("❌ error fetching favorites:", err);
       }
-  
-      fetchFavorites();
-    }, [user]);
+    }
+
+    fetchFavorites();
+  }, [user]);
 
   const toggleFavorite = async (movie: Movie) => {
     if (!user?.id) return;
-
     const isFav = favorites.includes(movie.id);
 
     try {
@@ -118,11 +125,10 @@ export default function Dashboard() {
         setFavorites((prev) => [...prev, movie.id]);
       }
     } catch (err) {
-      console.error("❌ error al actualizar favorito:", err);
+      console.error("❌ error updating favorite:", err);
     }
   };
 
-  // preparar grupos a mostrar
   const displayedGroups =
     selectedCategory && selectedCategory !== "favoritos" && groupedMovies[selectedCategory]
       ? { [selectedCategory]: groupedMovies[selectedCategory] }
@@ -135,6 +141,7 @@ export default function Dashboard() {
     setShowCategories(false);
   };
 
+  // handle clicks outside menu to close it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -170,10 +177,10 @@ export default function Dashboard() {
       <div className="movies-container">
         <div className="header-row">
           <div className="user-info">
-            <div className="avatar" aria-label="perfil de usuario" onClick={goToProfile}>
+            <div className="avatar" aria-label="user profile" onClick={goToProfile}>
               {user?.firstName?.[0]?.toUpperCase() ?? "U"}
             </div>
-            <h2>bienvenido, {user?.firstName ?? "usuario"}</h2>
+            <h2>welcome, {user?.firstName ?? "user"}</h2>
           </div>
 
           <div className="user-menu-wrapper" ref={menuRef}>
@@ -206,7 +213,7 @@ export default function Dashboard() {
                       className={selectedCategory === null ? "active" : ""}
                       onClick={() => handleSelectCategory(null)}
                     >
-                      ver todo
+                      view all
                     </button>
                     <button
                       className={selectedCategory === "favoritos" ? "active" : ""}
@@ -226,18 +233,18 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <button onClick={() => navigate("/aboutus")}>ℹ️ sobre nosotros</button>
-                <button onClick={handleLogout}>🚪 cerrar sesion</button>
+                <button onClick={() => navigate("/aboutus")}>ℹ️ acerca de</button>
+                <button onClick={handleLogout}>🚪 cerrar sesión</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="movies-scroll" role="region" aria-label="contenedor de películas">
+        <div className="movies-scroll" role="region" aria-label="movie container">
           {Object.keys(displayedGroups).length === 0 ? (
             <div className="movies-placeholder">
               <p role="alert" aria-live="polite">
-                cargando peliculas...
+                loading movies...
               </p>
             </div>
           ) : (
@@ -257,18 +264,18 @@ export default function Dashboard() {
                       <div key={movie.id} className="movie-card">
                         <video className="movie-video" controls poster={movie.image}>
                           {videoLink && <source src={videoLink} type="video/mp4" />}
-                          tu navegador no soporta la reproduccion de video.
+                          your browser does not support video playback.
                         </video>
 
                         <div className="movie-info">
-                          <h4>{movie.user?.name ?? "autor desconocido"}</h4>
+                          <h4>{movie.user?.name ?? "unknown author"}</h4>
                           <a
                             href={movie.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="source-link"
                           >
-                            ver en pexels
+                            view on pexels
                           </a>
                           <button
                             className={`favorite-btn ${isFav ? "favorited" : ""}`}

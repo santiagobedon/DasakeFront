@@ -1,3 +1,4 @@
+// src/pages/changePassword/ChangePassword.tsx
 import React, { useState, useRef } from "react";
 import InputField from "../../components/InputField";
 import ButtonPrimary from "../../components/ButtonPrimary";
@@ -8,6 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { validatePassword } from "../../utils/validator";
 import "./Change-Password.scss";
 
+/**
+ * ChangePassword page
+ *
+ * Allows the user to change their current password.
+ * Validates password strength and confirmation.
+ * Displays live error messages and success notifications.
+ */
 export default function ChangePassword() {
   const [current, setCurrent] = useState("");
   const [password, setPassword] = useState("");
@@ -24,9 +32,10 @@ export default function ChangePassword() {
     e.preventDefault();
     if (!valid) {
       if (!pass.valid)
-        liveRef.current!.textContent = "la nueva contraseña no cumple los requisitos";
+        liveRef.current!.textContent =
+          "the new password does not meet the requirements";
       else if (password !== confirm)
-        liveRef.current!.textContent = "las contraseñas no coinciden";
+        liveRef.current!.textContent = "passwords do not match";
       return;
     }
 
@@ -37,16 +46,16 @@ export default function ChangePassword() {
         newPassword: password,
       });
       if (res.status === 200) {
-        toast.success("contraseña actualizada con éxito");
+        toast.success("password updated successfully");
         navigate("/profile");
       }
     } catch (err: any) {
       if (err?.response?.status === 400) {
-        liveRef.current!.textContent = "contraseña actual incorrecta";
+        liveRef.current!.textContent = "current password is incorrect";
       } else if (err?.response?.status === 401) {
         window.location.href = "/login";
       } else {
-        liveRef.current!.textContent = "ocurrió un error, intenta más tarde";
+        liveRef.current!.textContent = "an error occurred, try again later";
       }
     } finally {
       setLoading(false);
@@ -56,11 +65,11 @@ export default function ChangePassword() {
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>cambiar contraseña</h1>
+        <h1>change password</h1>
 
         <InputField
           id="current-pass"
-          label="contraseña actual"
+          label="current password"
           type="password"
           value={current}
           onChange={(e) => {
@@ -71,7 +80,7 @@ export default function ChangePassword() {
 
         <InputField
           id="new-pass"
-          label="nueva contraseña"
+          label="new password"
           type="password"
           value={password}
           onChange={(e) => {
@@ -82,7 +91,7 @@ export default function ChangePassword() {
 
         <InputField
           id="confirm-pass"
-          label="confirmar contraseña"
+          label="confirm password"
           type="password"
           value={confirm}
           onChange={(e) => {
@@ -93,7 +102,7 @@ export default function ChangePassword() {
 
         <div className="actions">
           <ButtonPrimary type="submit" disabled={!valid || loading}>
-            {loading ? <Spinner /> : "guardar cambios"}
+            {loading ? <Spinner /> : "save changes"}
           </ButtonPrimary>
         </div>
 

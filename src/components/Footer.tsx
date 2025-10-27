@@ -8,6 +8,22 @@ type Route = {
   children?: { path: string; name: string }[];
 };
 
+/**
+ * Footer component
+ *
+ * Displays a fixed footer with dynamic navigation links
+ * that adjust based on the user's authentication state.
+ *
+ * If the user is authenticated, private routes are displayed;
+ * otherwise, public routes are shown. Each route can have
+ * nested children links that are displayed below their parent.
+ *
+ * The footer remains visible at the bottom of the screen
+ * with a dark background and soft hover effects on links.
+ *
+ * Example:
+ * <Footer />
+ */
 export default function Footer() {
   const { user } = useAuth();
   const isAuthenticated = !!user;

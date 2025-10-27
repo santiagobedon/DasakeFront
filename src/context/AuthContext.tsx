@@ -2,6 +2,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
 
+/**
+ * User type represents the user object stored in context
+ * - id: unique identifier
+ * - firstName, lastName: optional personal info
+ * - email: optional email
+ * - age: optional age
+ * - createdAt, updatedAt: optional timestamps
+ */
 type User = {
   id: string;
   firstName?: string;
@@ -12,6 +20,17 @@ type User = {
   updatedAt?: string;
 };
 
+/**
+ * AuthContextType defines the context state and actions
+ * - user: currently authenticated user or null
+ * - token: JWT string or null
+ * - loading: indicates if auth state is being loaded
+ * - login: function to log in with email/password
+ * - logout: function to log out
+ * - signup: function to register a new user
+ * - refreshMe: function to refresh current user info
+ * - updateProfile: function to update user profile
+ */
 type AuthContextType = {
   user: User | null;
   token: string | null;
@@ -27,17 +46,30 @@ type AuthContextType = {
     confirmPassword: string;
   }) => Promise<void>;
   refreshMe: () => Promise<void>;
-  updateProfile: (payload: Partial<User>) => Promise<void>; //  agregado
+  updateProfile: (payload: Partial<User>) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * useAuth hook
+ * 
+ * Returns the authentication context
+ * Throws an error if used outside AuthProvider
+ */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 };
 
+/**
+ * AuthProvider component
+ *
+ * Provides authentication state and actions to its children
+ * - Stores token and user in localStorage for persistence
+ * - Handles login, signup, logout, refreshMe, and updateProfile
+ */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("auth_token"));
   const [user, setUser] = useState<User | null>(() => {
@@ -61,7 +93,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     init();
   }, [token]);
 
-
+  /**
+   * refreshMe
+   *
+   * Fetches the current user info from the API and updates state/localStorage
+   * Logs out if the token is invalid or expired
+   */
   async function refreshMe() {
     if (!token) {
       setUser(null);
@@ -73,20 +110,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // algunos backends devuelven { user: {...} } y otros devuelven {...} directo
       const userData = res.data.user ?? res.data;
       setUser(userData);
-
-      // persistimos en localStorage por si recarga la pagina
       localStorage.setItem("auth_user", JSON.stringify(userData));
 
-     return userData;
-   } catch (err: any) {
+      return userData;
+    } catch (err: any) {
       if (import.meta.env.DEV) console.error("error en refreshMe:", err);
 
-      // si el token expira o el servidor falla:
       if (err.response?.status === 401) {
-        // token invalido → cerramos sesion
         logout();
       } else {
         console.warn("no se pudo refrescar el usuario, status:", err.response?.status);
@@ -94,13 +126,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-
+  /**
+   * updateProfile
+   *
+   * Updates user profile on the API and updates local state/localStorage
+   */
   async function updateProfile(payload: Partial<User>) {
     if (!token) return;
     const res = await api.put("/users/me", payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (res.status === 200) {
       const updatedUser = res.data.user ?? res.data;
@@ -109,25 +143,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
+  /**
+   * login
+   *
+   * Authenticates with email and password, stores token and user info
+   */
   async function login(email: string, password: string) {
-  const res = await api.post("/auth/login", { email, password });
+    const res = await api.post("/auth/login", { email, password });
 
-  if (res.status === 200 && res.data.token) {
-    const t = res.data.token as string;
-    localStorage.setItem("auth_token", t);
-    setToken(t);
+    if (res.status === 200 && res.data.token) {
+      const t = res.data.token as string;
+      localStorage.setItem("auth_token", t);
+      setToken(t);
 
-    
-    if (res.data.user) {
-      setUser(res.data.user);
-      localStorage.setItem("auth_user", JSON.stringify(res.data.user));
+      if (res.data.user) {
+        setUser(res.data.user);
+        localStorage.setItem("auth_user", JSON.stringify(res.data.user));
+      }
+
+      return;
     }
-
-    return;
+    throw res;
   }
-  throw res;
-}
 
+  /**
+   * signup
+   *
+   * Registers a new user with the API
+   */
   async function signup(payload: {
     firstName: string;
     lastName: string;
@@ -150,6 +193,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     throw res;
   }
 
+  /**
+   * logout
+   *
+   * Clears auth token and user from state and localStorage
+   */
   function logout() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
@@ -165,7 +213,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     signup,
     refreshMe,
-    updateProfile, // 👈 agregado aquí también
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

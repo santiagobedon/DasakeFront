@@ -1,5 +1,4 @@
 // src/pages/aboutus/AboutUs.tsx
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AboutUs.scss";
 import logo from "../../assets/images/logo.png";
@@ -7,54 +6,57 @@ import Santiago from "../../assets/images/Santiago.png";
 import Kevin from "../../assets/images/Kevin.jpg";
 import Gianka from "../../assets/images/Gianka.jpg";
 
-// placeholders para las fotos del equipo
-const daniela = "https://via.placeholder.com/100";
-
-
+/**
+ * AboutUs page
+ *
+ * Displays information about the company, mission, vision, and team members.
+ * Includes a back button to navigate to the previous page.
+ */
 export default function AboutUs() {
   const navigate = useNavigate();
+
+  // placeholder for team member not available
+  const daniela = "https://via.placeholder.com/100";
 
   return (
     <div className="aboutus-page">
       <div className="aboutus-header">
-        <img src={logo} alt="Logo de la empresa" className="aboutus-logo" />
-        <h1>Sobre Nosotros</h1>
+        <img src={logo} alt="Company Logo" className="aboutus-logo" />
+        <h1>About Us</h1>
         <button className="back-button" onClick={() => navigate(-1)}>
-            Volver
+          Back
         </button>
       </div>
 
       <div className="aboutus-content">
         <section className="aboutus-description">
           <p>
-            Somos una empresa de desarrollo dedicada a crear soluciones web
-            innovadoras y elegantes. En este proyecto, hemos desarrollado un
-            aplicativo web para que los usuarios puedan explorar y disfrutar de
-            películas de manera intuitiva y moderna.
+            We are a development company dedicated to creating innovative and
+            elegant web solutions. In this project, we developed a web
+            application for users to explore and enjoy movies in an intuitive
+            and modern way.
           </p>
         </section>
 
         <section className="aboutus-mv">
           <div className="mv-item">
-            <h2>Misión</h2>
+            <h2>Mission</h2>
             <p>
-              Proporcionar experiencias digitales de calidad que conecten a
-              los usuarios con el entretenimiento cinematográfico de forma
-              sencilla y atractiva.
+              Provide high-quality digital experiences that connect users with
+              cinematic entertainment in a simple and engaging way.
             </p>
           </div>
           <div className="mv-item">
-            <h2>Visión</h2>
+            <h2>Vision</h2>
             <p>
-              Ser referentes en el desarrollo de aplicaciones web de
-              entretenimiento, combinando tecnología, diseño y usabilidad
-              para crear experiencias memorables.
+              Become a reference in web entertainment applications by combining
+              technology, design, and usability to create memorable experiences.
             </p>
           </div>
         </section>
 
         <section className="aboutus-team">
-          <h2>Nuestro Equipo</h2>
+          <h2>Our Team</h2>
           <div className="team-grid">
             <div className="team-card">
               <img src={Santiago} alt="Santiago Bedon" />
