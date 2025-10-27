@@ -3,12 +3,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AboutUs.scss";
 import logo from "../../assets/images/logo.png";
+import Santiago from "../../assets/images/Santiago.png";
+import Kevin from "../../assets/images/Kevin.jpg";
+import Gianka from "../../assets/images/Gianka.jpg";
 
 // placeholders para las fotos del equipo
-const santiago = "https://via.placeholder.com/100";
-const kevin = "https://via.placeholder.com/100";
 const daniela = "https://via.placeholder.com/100";
-const giankarlo = "https://via.placeholder.com/100";
+
 
 export default function AboutUs() {
   const navigate = useNavigate();
@@ -56,13 +57,13 @@ export default function AboutUs() {
           <h2>Nuestro Equipo</h2>
           <div className="team-grid">
             <div className="team-card">
-              <img src={santiago} alt="Santiago Bedon" />
+              <img src={Santiago} alt="Santiago Bedon" />
               <h3>Santiago Bedon</h3>
               <p>Backend Developer & Product Owner</p>
             </div>
             <div className="team-card">
-              <img src={kevin} alt="Kevin C. Molino" />
-              <h3>Kevin C. Molino</h3>
+              <img src={Kevin} alt="Kevin C. Molina" />
+              <h3>Kevin C. Molina</h3>
               <p>Frontend Developer</p>
             </div>
             <div className="team-card">
@@ -71,7 +72,7 @@ export default function AboutUs() {
               <p>Database Developer</p>
             </div>
             <div className="team-card">
-              <img src={giankarlo} alt="Giankarlo Cifuentes" />
+              <img src={Gianka} alt="Giankarlo Cifuentes" />
               <h3>Giankarlo Cifuentes</h3>
               <p>Designer & QA</p>
             </div>
