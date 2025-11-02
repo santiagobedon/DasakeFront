@@ -9,17 +9,17 @@
  */
 export const navigationMap = {
   public: [
-    { path: "/login", name: "iniciar sesión" },
-    { path: "/register", name: "registrarse" },
-    { path: "/recover", name: "recuperar contraseña" },
+    { path: "/login", name: "Iniciar Sesión" },
+    { path: "/register", name: "Registrarse" },
+    { path: "/recover", name: "Recuperar Contraseña" },
   ],
 
   private: [
-    { path: "/profile", name: "perfil" },
-    { path: "/profile/edit", name: "editar perfil" },
-    { path: "/aboutus", name: "sobre nosotros" },
-    { path: "/change-password", name: "cambiar contraseña" },
-    { path: "/dashboard", name: "panel de peliculas" },
+    { path: "/profile", name: "Perfil" },
+    { path: "/profile/edit", name: "Editar Perfil" },
+    { path: "/aboutus", name: "Sobre Nosotros" },
+    { path: "/change-password", name: "Cambiar Contraseña" },
+    { path: "/dashboard", name: "Panel de Películas" },
   ],
 };
 

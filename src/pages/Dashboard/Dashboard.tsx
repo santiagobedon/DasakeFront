@@ -1,4 +1,3 @@
-// src/pages/dashboard/Dashboard.tsx
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -45,14 +44,14 @@ export default function Dashboard() {
   const timerRef = useRef<number | null>(null);
 
   const availableCategories = [
-    "accion",
+    "acción",
     "naturaleza",
     "deportes",
     "cine",
-    "musica",
-    "tecnologia",
+    "música",
+    "tecnología",
     "urbano",
-    "gastronomia",
+    "gastronomía",
     "otros",
   ];
 
@@ -83,7 +82,7 @@ export default function Dashboard() {
           setGroupedMovies(res.data);
         }
       } catch (err) {
-        console.error("❌ error fetching movies:", err);
+        console.error("❌ error al obtener películas:", err);
       }
     }
     fetchMovies();
@@ -100,7 +99,7 @@ export default function Dashboard() {
         const favIds = Array.isArray(res.data) ? res.data.map((f: any) => f.video_id) : [];
         setFavorites(favIds);
       } catch (err) {
-        console.error("❌ error fetching favorites:", err);
+        console.error("❌ error al obtener favoritos:", err);
       }
     }
 
@@ -125,7 +124,7 @@ export default function Dashboard() {
         setFavorites((prev) => [...prev, movie.id]);
       }
     } catch (err) {
-      console.error("❌ error updating favorite:", err);
+      console.error("❌ error al actualizar favorito:", err);
     }
   };
 
@@ -173,124 +172,118 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="dash-page">
-      <div className="movies-container">
-        <div className="header-row">
-          <div className="user-info">
-            <div className="avatar" aria-label="user profile" onClick={goToProfile}>
-              {user?.firstName?.[0]?.toUpperCase() ?? "U"}
-            </div>
-            <h2>welcome, {user?.firstName ?? "user"}</h2>
-          </div>
-
-          <div className="user-menu-wrapper" ref={menuRef}>
-            <div
-              className="hamburger-menu"
-              onMouseEnter={handleMouseEnterMenu}
-              onMouseLeave={handleMouseLeaveMenu}
-            >
-              <div className="menu-icon" ref={iconRef}>
-                <span />
-                <span />
-                <span />
+    <div className="main-content">
+      <div className="dash-page">
+        <div className="movies-container">
+          <div className="header-row">
+            <div className="user-info">
+              <div className="avatar" aria-label="perfil de usuario" onClick={goToProfile}>
+                {user?.firstName?.[0]?.toUpperCase() ?? "U"}
               </div>
+              <h2>bienvenido, {user?.firstName ?? "usuario"}</h2>
+            </div>
 
+            <div className="user-menu-wrapper" ref={menuRef}>
               <div
-                className={`menu-content ${menuOpen ? "show" : ""}`}
+                className="hamburger-menu"
                 onMouseEnter={handleMouseEnterMenu}
                 onMouseLeave={handleMouseLeaveMenu}
               >
-                <div className="menu-section">
-                  <button
-                    onClick={() => setShowCategories((prev) => !prev)}
-                    className="menu-button"
-                  >
-                    📂 categorias
-                  </button>
-
-                  <div className={`categories-submenu ${showCategories ? "show" : ""}`}>
-                    <button
-                      className={selectedCategory === null ? "active" : ""}
-                      onClick={() => handleSelectCategory(null)}
-                    >
-                      view all
-                    </button>
-                    <button
-                      className={selectedCategory === "favoritos" ? "active" : ""}
-                      onClick={() => handleSelectCategory("favoritos")}
-                    >
-                      ⭐ favoritos
-                    </button>
-                    {availableCategories.map((cat) => (
-                      <button
-                        key={cat}
-                        className={selectedCategory === cat ? "active" : ""}
-                        onClick={() => handleSelectCategory(cat)}
-                      >
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
+                <div className="menu-icon" ref={iconRef}>
+                  <span />
+                  <span />
+                  <span />
                 </div>
 
-                <button onClick={() => navigate("/aboutus")}>ℹ️ acerca de</button>
-                <button onClick={handleLogout}>🚪 cerrar sesión</button>
+                <div
+                  className={`menu-content ${menuOpen ? "show" : ""}`}
+                  onMouseEnter={handleMouseEnterMenu}
+                  onMouseLeave={handleMouseLeaveMenu}
+                >
+                  <div className="menu-section">
+                    <button
+                      onClick={() => setShowCategories((prev) => !prev)}
+                      className="menu-button"
+                    >
+                      📂 categorías
+                    </button>
+
+                    <div className={`categories-submenu ${showCategories ? "show" : ""}`}>
+                      <button
+                        className={selectedCategory === null ? "active" : ""}
+                        onClick={() => handleSelectCategory(null)}
+                      >
+                        ver todas
+                      </button>
+                      {availableCategories.map((cat) => (
+                        <button
+                          key={cat}
+                          className={selectedCategory === cat ? "active" : ""}
+                          onClick={() => handleSelectCategory(cat)}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    className={selectedCategory === "favoritos" ? "active" : ""}
+                    onClick={() => handleSelectCategory("favoritos")}
+                  >
+                    ❤️ favoritos
+                  </button>
+
+                  <button onClick={() => navigate("/aboutus")}>ℹ️ acerca de</button>
+                  <button onClick={handleLogout}>🚪 cerrar sesión</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          <div className="movies-scroll" role="region" aria-label="contenedor de películas">
+            {Object.keys(displayedGroups).length === 0 ? (
+              <div className="movies-placeholder">
+                <p role="alert" aria-live="polite">
+                  Cargando películas...
+                </p>
+              </div>
+            ) : (
+              Object.entries(displayedGroups).map(([cat, catMovies]) => (
+                <section className="category-section" key={cat}>
+                  <h3 className="category-title">{cat}</h3>
+                  <div className="movies-row" tabIndex={0}>
+                    {catMovies.map((movie) => {
+                      const videoLink =
+                        movie.video_files?.find(
+                          (file) => file.quality === "hd" || file.quality === "sd"
+                        )?.link ?? movie.url ?? "";
 
-        <div className="movies-scroll" role="region" aria-label="movie container">
-          {Object.keys(displayedGroups).length === 0 ? (
-            <div className="movies-placeholder">
-              <p role="alert" aria-live="polite">
-                loading movies...
-              </p>
-            </div>
-          ) : (
-            Object.entries(displayedGroups).map(([cat, catMovies]) => (
-              <section className="category-section" key={cat}>
-                <h3 className="category-title">{cat}</h3>
-                <div className="movies-row" tabIndex={0}>
-                  {catMovies.map((movie) => {
-                    const videoLink =
-                      movie.video_files?.find(
-                        (file) => file.quality === "hd" || file.quality === "sd"
-                      )?.link ?? movie.url ?? "";
+                      const isFav = favorites.includes(movie.id);
 
-                    const isFav = favorites.includes(movie.id);
+                      return (
+                        <div key={movie.id} className="movie-card">
+                          <video className="movie-video" controls poster={movie.image}>
+                            {videoLink && <source src={videoLink} type="video/mp4" />}
+                            Tu navegador no soporta la reproducción de video.
+                          </video>
 
-                    return (
-                      <div key={movie.id} className="movie-card">
-                        <video className="movie-video" controls poster={movie.image}>
-                          {videoLink && <source src={videoLink} type="video/mp4" />}
-                          your browser does not support video playback.
-                        </video>
-
-                        <div className="movie-info">
-                          <h4>{movie.user?.name ?? "unknown author"}</h4>
-                          <a
-                            href={movie.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="source-link"
-                          >
-                            view on pexels
-                          </a>
-                          <button
-                            className={`favorite-btn ${isFav ? "favorited" : ""}`}
-                            onClick={() => toggleFavorite(movie)}
-                          >
-                            {isFav ? "⭐" : "☆"}
-                          </button>
+                          <div className="movie-info">
+                            <h4>{movie.user?.name ?? "autor desconocido"}</h4>
+                            <button
+                              className={`favorite-btn ${isFav ? "favorited" : ""}`}
+                              onClick={() => toggleFavorite(movie)}
+                            >
+                              {isFav ? "❤️" : "🤍"}
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            ))
-          )}
+                      );
+                    })}
+                  </div>
+                </section>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

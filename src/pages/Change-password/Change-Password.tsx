@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { validatePassword } from "../../utils/validator";
 import "./Change-Password.scss";
+import logo from "../../assets/images/logo.png";
 
 /**
  * ChangePassword page
@@ -23,6 +24,7 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
   const liveRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const handleBack = () => navigate("/Dashboard");
 
   const pass = validatePassword(password);
   const valid =
@@ -33,9 +35,9 @@ export default function ChangePassword() {
     if (!valid) {
       if (!pass.valid)
         liveRef.current!.textContent =
-          "the new password does not meet the requirements";
+          "La nueva contraseña no cumple con los requisitos mínimos";
       else if (password !== confirm)
-        liveRef.current!.textContent = "passwords do not match";
+        liveRef.current!.textContent = "Las contraseñas no coinciden";
       return;
     }
 
@@ -51,11 +53,11 @@ export default function ChangePassword() {
       }
     } catch (err: any) {
       if (err?.response?.status === 400) {
-        liveRef.current!.textContent = "current password is incorrect";
+        liveRef.current!.textContent = "La contraseña actual es incorrecta";
       } else if (err?.response?.status === 401) {
         window.location.href = "/login";
       } else {
-        liveRef.current!.textContent = "an error occurred, try again later";
+        liveRef.current!.textContent = "Ocurrió un error, inténtalo de nuevo más tarde";
       }
     } finally {
       setLoading(false);
@@ -65,11 +67,14 @@ export default function ChangePassword() {
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>change password</h1>
+        <div className="auth-logo-wrapper">
+          <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
+        </div>
+        <h1>Cambiar contraseña</h1>
 
         <InputField
           id="current-pass"
-          label="current password"
+          label="Contraseña actual"
           type="password"
           value={current}
           onChange={(e) => {
@@ -80,7 +85,7 @@ export default function ChangePassword() {
 
         <InputField
           id="new-pass"
-          label="new password"
+          label="Nueva contraseña"
           type="password"
           value={password}
           onChange={(e) => {
@@ -91,7 +96,7 @@ export default function ChangePassword() {
 
         <InputField
           id="confirm-pass"
-          label="confirm password"
+          label="Confirmar contraseña"
           type="password"
           value={confirm}
           onChange={(e) => {
@@ -102,7 +107,10 @@ export default function ChangePassword() {
 
         <div className="actions">
           <ButtonPrimary type="submit" disabled={!valid || loading}>
-            {loading ? <Spinner /> : "save changes"}
+            {loading ? <Spinner /> : "Guardar cambios"}
+          </ButtonPrimary>
+          <ButtonPrimary onClick={handleBack} aria-label="volver al inicio">
+            Inicio
           </ButtonPrimary>
         </div>
 
@@ -112,10 +120,6 @@ export default function ChangePassword() {
           ref={liveRef}
         ></div>
       </form>
-      <div className="brand">
-        <div className="brand-logo" aria-hidden />
-        <div className="brand-text">dasakemovies</div>
-      </div>
     </div>
   );
 }

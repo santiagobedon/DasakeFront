@@ -7,7 +7,7 @@ import api from "../../services/api";
 import { emailRegex } from "../../utils/validator";
 import { toast } from "react-toastify";
 import "./ForgotPassword.scss";
-
+import logo from "../../assets/images/logo.png";
 /**
  * ForgotPassword page
  *
@@ -52,6 +52,9 @@ export default function ForgotPassword() {
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
+        <div className="auth-logo-wrapper">
+          <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
+        </div>
         <h1>Recuperar contraseña</h1>
         <p className="muted">
           Ingresa tu correo para recibir el enlace de recuperación
@@ -79,11 +82,6 @@ export default function ForgotPassword() {
 
         <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
       </form>
-
-      <div className="brand">
-        <div className="brand-logo" aria-hidden />
-        <div className="brand-text">DasakeMovies</div>
-      </div>
     </div>
   );
 }

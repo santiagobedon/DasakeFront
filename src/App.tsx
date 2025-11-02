@@ -18,8 +18,8 @@ import Footer from "./components/Footer";
 export default function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen flex flex-col justify-between">
-        <main className="flex-grow">
+      <div className="app-container">
+        <main className="main-content">
           <AppRoutes />
         </main>
         <Footer isAuthenticated={false} />

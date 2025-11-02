@@ -51,3 +51,16 @@ body {
 
 /* small helpers */
 a { color: #44c7ff; text-decoration: none; }
+/* estructura base del layout */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* contenedor principal que permite al footer quedarse abajo */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

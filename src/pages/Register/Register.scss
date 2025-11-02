@@ -1,30 +1,34 @@
-/* src/pages/Register/Register.scss */
 @use "../../styles/global.scss" as *;
 
+.content-main {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px); /* se ajusta si tu header mide 80px */
+}
+
 .auth-page {
+  flex: 1; /* ocupa todo el espacio restante antes del footer */
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  position: relative;
   padding: 32px;
-  background: #121212; // fondo oscuro consistente con login
+  background: #121212;
 }
 
 .auth-card {
-  position: relative; // necesario para posicionar el logo encima
-  width: 680px; // login
+  position: relative;
+  width: 680px;
   max-width: 92%;
   background: linear-gradient(#1b1b1d, #1b1b1d);
   border-radius: 18px;
-  padding: 60px 40px 40px; // espacio extra arriba para el logo
+  padding: 60px 40px 40px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   text-align: center;
 }
 
 .auth-logo-wrapper {
   position: absolute;
-  top: -30px; // ajusta según tamaño del logo
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -46,6 +50,7 @@
 
 .password-hints { 
   display:flex; 
+  flex-wrap: wrap;
   gap:8px; 
   justify-content:center; 
   margin:8px 0 12px; 
@@ -67,8 +72,9 @@
   margin-top:6px; 
 }
 
-.submit-btn { 
-  margin-top: 12px; 
+.actions {
+  margin-top: 16px;
+  margin-bottom: 24px; /* agrega espacio extra antes del texto y el footer */
 }
 
 .muted { 
@@ -84,6 +90,7 @@
   align-items:center;
   gap:12px;
 }
+
 .brand-logo {
   width: 72px;
   height:72px;
@@ -91,8 +98,15 @@
   background: radial-gradient(circle at 30% 30%, #fff3, #8dd2ff 10%, #7a00ff 60%);
   box-shadow: 0 6px 20px rgba(122,0,255,0.16);
 }
+
 .brand-text { 
   font-weight: 700; 
   font-size: 20px; 
   color: #fff; 
+}
+.brand-text span { 
+  color: #7a00ff; 
+}
+.auth-page {
+  margin-bottom: 120px; /* da espacio suficiente sobre el footer */
 }

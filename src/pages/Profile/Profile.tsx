@@ -79,62 +79,64 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-page">
-      <div className="profile-card">
-        <h2>Perfil de {user.firstName} {user.lastName}</h2>
+    <div className="main-content">
+      <div className="profile-page">
+        <div className="profile-card">
+          <h2>Perfil de {user.firstName} {user.lastName}</h2>
 
-        <section className="profile-details">
-          <div className="detail-row"><strong>Nombres:</strong> <span>{user.firstName}</span></div>
-          <div className="detail-row"><strong>Apellidos:</strong> <span>{user.lastName}</span></div>
-          <div className="detail-row"><strong>Edad:</strong> <span>{user.age}</span></div>
-          <div className="detail-row"><strong>Correo:</strong> <span>{user.email}</span></div>
-        </section>
+          <section className="profile-details">
+            <div className="detail-row"><strong>Nombres:</strong> <span>{user.firstName}</span></div>
+            <div className="detail-row"><strong>Apellidos:</strong> <span>{user.lastName}</span></div>
+            <div className="detail-row"><strong>Edad:</strong> <span>{user.age}</span></div>
+            <div className="detail-row"><strong>Correo:</strong> <span>{user.email}</span></div>
+          </section>
 
-        <div className="profile-buttons">
-          <ButtonPrimary onClick={handleEdit} aria-label="editar perfil">
-            Editar perfil
-          </ButtonPrimary>
-          <ButtonPrimary onClick={openModal} aria-label="eliminar cuenta" className="danger-btn">
-            Eliminar cuenta
-          </ButtonPrimary>
-          <ButtonPrimary onClick={handleBack} aria-label="volver al inicio">
-            Inicio
-          </ButtonPrimary>
+          <div className="profile-buttons">
+            <ButtonPrimary onClick={handleEdit} aria-label="editar perfil">
+              Editar perfil
+            </ButtonPrimary>
+            <ButtonPrimary onClick={openModal} aria-label="eliminar cuenta" className="danger-btn">
+              Eliminar cuenta
+            </ButtonPrimary>
+            <ButtonPrimary onClick={handleBack} aria-label="volver al inicio">
+              Inicio
+            </ButtonPrimary>
+          </div>
+
+          <div aria-live="polite" className="sr-only" id="profile-messages"></div>
         </div>
 
-        <div aria-live="polite" className="sr-only" id="profile-messages"></div>
-      </div>
-
-      {/* modal eliminar cuenta */}
-      {modalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-card">
-            <h3>Eliminar cuenta</h3>
-            <p>Para eliminar tu cuenta escribe <strong>ELIMINAR</strong> y tu contraseña:</p>
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder='Escribe "ELIMINAR"'
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-            />
-            <div className="modal-actions">
-              <ButtonPrimary onClick={closeModal} disabled={loading}>Cancelar</ButtonPrimary>
-              <ButtonPrimary
-                onClick={handleDelete}
-                disabled={loading || !password || confirmText !== "ELIMINAR"}
-              >
-                {loading ? <Spinner size={16} /> : "Eliminar"}
-              </ButtonPrimary>
+        {/* modal eliminar cuenta */}
+        {modalOpen && (
+          <div className="modal-backdrop">
+            <div className="modal-card">
+              <h3>Eliminar cuenta</h3>
+              <p>Para eliminar tu cuenta escribe <strong>ELIMINAR</strong> y tu contraseña:</p>
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder='Escribe "ELIMINAR"'
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+              />
+              <div className="modal-actions">
+                <ButtonPrimary onClick={closeModal} disabled={loading}>Cancelar</ButtonPrimary>
+                <ButtonPrimary
+                  onClick={handleDelete}
+                  disabled={loading || !password || confirmText !== "ELIMINAR"}
+                >
+                  {loading ? <Spinner size={16} /> : "Eliminar"}
+                </ButtonPrimary>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+    </div>
     </div>
   );
 }

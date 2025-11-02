@@ -100,82 +100,84 @@ export default function Register() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="content-main">
+      <div className="auth-page">
 
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <div className="auth-logo-wrapper">
-          <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
-        </div>
-        <h1>Crear cuenta</h1>
-        <p className="muted">Regístrate para acceder a todas las películas</p>
+        <form className="auth-card" onSubmit={handleSubmit}>
+          <div className="auth-logo-wrapper">
+            <img src={logo} alt="Logo DasakeMovies" className="auth-logo" />
+          </div>
+          <h1>Crear cuenta</h1>
+          <p className="muted">Regístrate para acceder a todas las películas</p>
 
-        <InputField
-          id="nombre"
-          label="Nombres"
-          value={firstName}
-          onChange={(e) => { setfirstName(e.target.value); announce(""); }}
-        />
+          <InputField
+            id="nombre"
+            label="Nombres"
+            value={firstName}
+            onChange={(e) => { setfirstName(e.target.value); announce(""); }}
+          />
 
-        <InputField
-          id="apellidos"
-          label="Apellidos"
-          value={lastName}
-          onChange={(e) => { setlastName(e.target.value); announce(""); }}
-        />
+          <InputField
+            id="apellidos"
+            label="Apellidos"
+            value={lastName}
+            onChange={(e) => { setlastName(e.target.value); announce(""); }}
+          />
 
-        <InputField
-          id="edad"
-          label="Edad"
-          type="number"
-          value={age}
-          onChange={(e) => { setAge(e.target.value); announce(""); }}
-        />
+          <InputField
+            id="edad"
+            label="Edad"
+            type="number"
+            value={age}
+            onChange={(e) => { setAge(e.target.value); announce(""); }}
+          />
 
-        <InputField
-          id="email"
-          label="Correo electrónico"
-          value={email}
-          onChange={(e) => { setEmail(e.target.value); announce(""); }}
-        />
-        {!emailValid && email.length > 0 && <div className="field-error">Correo inválido</div>}
+          <InputField
+            id="email"
+            label="Correo electrónico"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); announce(""); }}
+          />
+          {!emailValid && email.length > 0 && <div className="field-error">Correo inválido</div>}
 
-        <InputField
-          id="password"
-          label="Contraseña"
-          type="password"
-          value={password}
-          onChange={(e) => { setPassword(e.target.value); announce(""); }}
-        />
-        <div className="password-hints">
-          <small className={pass.length ? "ok" : ""}>≥ 8 caracteres/letras</small>
-          <small className={pass.upper ? "ok" : ""}>1 mayúscula</small>
-          <small className={pass.num ? "ok" : ""}>1 número</small>
-          <small className={pass.special ? "ok" : ""}>1 carácter especial</small>
-        </div>
+          <InputField
+            id="password"
+            label="Contraseña"
+            type="password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); announce(""); }}
+          />
+          <div className="password-hints">
+            <small className={pass.length ? "ok" : ""}>≥ 8 caracteres/letras</small>
+            <small className={pass.upper ? "ok" : ""}>1 mayúscula</small>
+            <small className={pass.num ? "ok" : ""}>1 número</small>
+            <small className={pass.special ? "ok" : ""}>1 carácter especial</small>
+          </div>
 
-        <InputField
-          id="confirm"
-          label="Confirmar contraseña"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => { setConfirmPassword(e.target.value); announce(""); }}
-        />
-        {!confirmMatch && confirmPassword.length > 0 && (
-          <div className="field-error">Las contraseñas no coinciden</div>
-        )}
+          <InputField
+            id="confirm"
+            label="Confirmar contraseña"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => { setConfirmPassword(e.target.value); announce(""); }}
+          />
+          {!confirmMatch && confirmPassword.length > 0 && (
+            <div className="field-error">Las contraseñas no coinciden</div>
+          )}
 
-        <div className="actions">
-          <ButtonPrimary type="submit" disabled={!formValid || loading}>
-            {loading ? <Spinner size={16} /> : "Registrarse"}
-          </ButtonPrimary>
-        </div>
+          <div className="actions">
+            <ButtonPrimary type="submit" disabled={!formValid || loading}>
+              {loading ? <Spinner size={16} /> : "Registrarse"}
+            </ButtonPrimary>
+          </div>
 
-        <p className="muted">
-          ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
-        </p>
+          <p className="muted">
+            ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+          </p>
 
-        <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
-      </form>
+          <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
+        </form>
+      </div>
     </div>
   );
 }

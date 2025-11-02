@@ -47,12 +47,12 @@ export default function EditProfile() {
    */
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    if (!valid) return announce("corrige los campos antes de continuar");
+    if (!valid) return announce("Corrige los campos antes de continuar");
 
     try {
       setLoading(true);
-      announce("guardando cambios...");
-      if (!user) return <p>cargando...</p>;
+      announce("Guardando cambios...");
+      if (!user) return <p>Cargando...</p>;
       const res = await api.put(`/users/${user.id}`, {
         firstName,
         lastName,
@@ -61,17 +61,17 @@ export default function EditProfile() {
       });
 
       if (res.status === 200) {
-        toast.success("perfil actualizado");
+        toast.success("Perfil actualizado");
         await refreshMe();
         setTimeout(() => navigate("/profile"), 500);
       }
     } catch (err: any) {
       if (err?.response?.status === 409) {
-        announce("el correo ya está registrado");
+        announce("El correo ya está registrado");
       } else if (err?.response?.status === 401) {
         window.location.href = "/login";
       } else {
-        announce("ocurrió un error, intenta más tarde");
+        announce("Ocurrió un error, intenta más tarde");
         if (import.meta.env.DEV) console.error(err);
       }
     } finally {
@@ -82,101 +82,103 @@ export default function EditProfile() {
   if (!user) {
     return (
       <div className="profile-page">
-        <p>cargando usuario...</p>
+        <p>Cargando usuario...</p>
       </div>
     );
   }
 
   return (
-    <div className="profile-page">
-      <form className="profile-card" onSubmit={handleSave} noValidate>
-        <h2>editar perfil</h2>
+    <div className="main-content">
+      <div className="profile-page">
+        <form className="profile-card" onSubmit={handleSave} noValidate>
+          <h2>Editar perfil</h2>
 
-        <div className="profile-info">
-          <label>
-            nombres
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => {
-                setfirstName(e.target.value);
-                announce("");
+          <div className="profile-info">
+            <label>
+              Nombres
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => {
+                  setfirstName(e.target.value);
+                  announce("");
+                }}
+                placeholder="nombres"
+                required
+              />
+            </label>
+
+            <label>
+              Apellidos
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => {
+                  setlastName(e.target.value);
+                  announce("");
+                }}
+                placeholder="apellidos"
+                required
+              />
+            </label>
+
+            <label>
+              Edad
+              <input
+                type="number"
+                value={age}
+                min={13}
+                onChange={(e) => {
+                  setage(e.target.value);
+                  announce("");
+                }}
+                placeholder="edad"
+                required
+              />
+            </label>
+
+            <label>
+              Correo
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  announce("");
+                }}
+                placeholder="correo electrónico"
+                required
+              />
+            </label>
+          </div>
+
+          <div className="profile-buttons">
+            <ButtonPrimary type="submit" disabled={!valid || loading}>
+              {loading ? <Spinner size={16} /> : "Guardar cambios"}
+            </ButtonPrimary>
+
+            <ButtonPrimary
+              type="button"
+              onClick={() => navigate("/change-password")}
+            >
+              Cambiar contraseña
+            </ButtonPrimary>
+
+            <ButtonPrimary
+              type="button"
+              onClick={() => navigate("/profile")}
+              style={{
+                backgroundColor: "#444",
+                color: "white",
               }}
-              placeholder="nombres"
-              required
-            />
-          </label>
+            >
+              Volver al perfil
+            </ButtonPrimary>
+          </div>
 
-          <label>
-            apellidos
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => {
-                setlastName(e.target.value);
-                announce("");
-              }}
-              placeholder="apellidos"
-              required
-            />
-          </label>
-
-          <label>
-            edad
-            <input
-              type="number"
-              value={age}
-              min={13}
-              onChange={(e) => {
-                setage(e.target.value);
-                announce("");
-              }}
-              placeholder="edad"
-              required
-            />
-          </label>
-
-          <label>
-            correo
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                announce("");
-              }}
-              placeholder="correo electrónico"
-              required
-            />
-          </label>
-        </div>
-
-        <div className="profile-buttons">
-          <ButtonPrimary type="submit" disabled={!valid || loading}>
-            {loading ? <Spinner size={16} /> : "guardar cambios"}
-          </ButtonPrimary>
-
-          <ButtonPrimary
-            type="button"
-            onClick={() => navigate("/change-password")}
-          >
-            cambiar contraseña
-          </ButtonPrimary>
-
-          <ButtonPrimary
-            type="button"
-            onClick={() => navigate("/profile")}
-            style={{
-              backgroundColor: "#444",
-              color: "white",
-            }}
-          >
-            volver al perfil
-          </ButtonPrimary>
-        </div>
-
-        <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
-      </form>
+          <div className="visually-hidden" aria-live="polite" ref={liveRef}></div>
+        </form>
+      </div>
     </div>
   );
 }
