@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { navigationMap } from "../routes/navigationMap";
 import { useAuth } from "../context/AuthContext";
-import "../components/Footer.scss"; // ✅ se importa el archivo de estilos
-
+import "../components/Footer.scss";
+import manualPDF from "../assets/images/Manual_de_Usuario_DasakeMovie.pdf";
 type Route = {
   path: string;
   name: string;
@@ -43,7 +43,7 @@ export default function Footer() {
         ))}
 
         <span className="separator">|</span>
-        <a href="/manual_usuario.pdf" className="footer-help" download>
+        <a href={manualPDF} className="footer-help" download="Manual_de_Usuario_DasakeMovie.pdf">
           ¿Necesitas ayuda?
         </a>
       </div>
