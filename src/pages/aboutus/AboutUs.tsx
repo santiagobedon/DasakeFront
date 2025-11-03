@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo.png";
 import Santiago from "../../assets/images/Santiago.png";
 import Kevin from "../../assets/images/Kevin.jpg";
 import Gianka from "../../assets/images/Gianka.jpg";
-
+import Daniela from "../../assets/images/Daniela.jpg";
 /**
  * AboutUs page
  *
@@ -14,9 +14,6 @@ import Gianka from "../../assets/images/Gianka.jpg";
  */
 export default function AboutUs() {
   const navigate = useNavigate();
-
-  // placeholder for team member not available
-  const daniela = "https://via.placeholder.com/100";
 
   return (
     <div className="main-content">
@@ -71,7 +68,7 @@ export default function AboutUs() {
                 <p>Frontend Developer</p>
              </div>
               <div className="team-card">
-                <img src={daniela} alt="Daniela Martinez" />
+                <img src={Daniela} alt="Daniela Martinez" />
                 <h3>Daniela Martinez</h3>
                 <p>Database Developer</p>
               </div>
