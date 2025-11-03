@@ -102,6 +102,7 @@
             height: 100%;
             background: #00bcd4;
             border-radius: 4px;
+            transition: width 0.3s ease-in-out;
           }
         }
       }
@@ -166,16 +167,23 @@
         padding: 0.8rem;
         margin-bottom: 0.8rem;
         border-bottom: 1px solid #333;
+        position: relative;
+
+        .comment-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
 
         strong {
-          display: block;
           color: #00bcd4;
           margin-bottom: 0.2rem;
         }
 
         p {
-          margin: 0;
+          margin: 0.3rem 0 0 0;
           font-size: 0.95rem;
+          line-height: 1.4;
         }
 
         textarea {
@@ -189,10 +197,11 @@
           resize: none;
         }
 
-        .comment-actions {
-          margin-top: 0.5rem;
+        .edit-section {
           display: flex;
+          flex-direction: column;
           gap: 0.5rem;
+          margin-top: 0.5rem;
 
           button {
             background: #333;
@@ -203,11 +212,66 @@
             font-size: 0.85rem;
             cursor: pointer;
             transition: 0.2s;
+            align-self: flex-start;
 
             &:hover {
               background: #00bcd4;
               color: #000;
             }
+          }
+        }
+
+        /* tres puntos */
+        .menu-icon {
+          position: relative;
+          font-size: 1.4rem;
+          cursor: pointer;
+          color: #aaa;
+          transition: 0.2s;
+
+          &:hover {
+            color: #fff;
+          }
+
+          .menu-dropdown {
+            position: absolute;
+            top: 1.5rem;
+            right: 0;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            min-width: 100px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            animation: fadeIn 0.15s ease-in-out;
+
+            button {
+              background: none;
+              color: #fff;
+              border: none;
+              padding: 0.6rem;
+              text-align: left;
+              cursor: pointer;
+              transition: 0.2s;
+
+              &:hover {
+                background: #00bcd4;
+                color: #000;
+              }
+            }
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-5px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
       }

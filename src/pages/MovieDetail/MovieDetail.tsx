@@ -5,7 +5,9 @@ import api from "../../services/api";
 import "./MovieDetail.scss";
 
 interface Comment {
+  id: string;
   user: string;
+  userId: string;
   text: string;
 }
 
@@ -21,6 +23,9 @@ export default function MovieDetail() {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [movieAverageRating, setMovieAverageRating] = useState<number | null>(null);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editedText, setEditedText] = useState("");
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
 
   if (!movie) {
     return (
@@ -36,22 +41,27 @@ export default function MovieDetail() {
     movie.url ??
     "";
 
+  // ========================
+  // carga inicial
+  // ========================
   useEffect(() => {
     const fetchData = async () => {
       try {
         // comentarios
         const commentsRes = await api.get(`/${movie.id}/comments`);
-        setComments(commentsRes.data);
+        const formattedComments = commentsRes.data.map((c: any) => ({
+          id: c.id,
+          user: c.user ?? "usuario",
+          userId: c.userId ?? "",
+          text: c.text,
+        }));
+        setComments(formattedComments);
 
-        // calificación usuario y promedio
+        // calificaciones
         const ratingRes = await api.get(`/${movie.id}/rating`, { params: { userId: user?.id } });
-
-        if (ratingRes.data && ratingRes.data.userRating !== null) {
-          setRating(ratingRes.data.userRating);
-        }
-
-        if (ratingRes.data && ratingRes.data.promedio !== undefined) {
-          setMovieAverageRating(ratingRes.data.promedio);
+        if (ratingRes.data) {
+          if (ratingRes.data.userRating !== null) setRating(ratingRes.data.userRating);
+          if (ratingRes.data.promedio !== undefined) setMovieAverageRating(ratingRes.data.promedio);
         }
       } catch (err) {
         console.error("❌ error al cargar datos de la película:", err);
@@ -61,41 +71,101 @@ export default function MovieDetail() {
     fetchData();
   }, [movie, user?.id]);
 
+  // ========================
+  // publicar comentario
+  // ========================
   const handleSubmitComment = async () => {
-    if (!comment.trim()) return;
-
-    const newComment: Comment = { user: user?.firstName ?? "usuario", text: comment.trim() };
-    setComments((prev) => [newComment, ...prev]);
-    setComment("");
+    if (!comment.trim() || !user?.id) return;
 
     try {
-      await api.post("/comments", {
-        userId: user?.id,
+      const res = await api.post("/comments", {
+        userId: user.id,
         movieExternalId: movie.id,
-        content: newComment.text,
+        content: comment.trim(),
         title: movie.title,
         posterUrl: movie.image,
       });
+
+      const newComment = res.data.data?.[0];
+      setComments((prev) => [
+        {
+          id: newComment?.id ?? crypto.randomUUID(),
+          user: user.firstName ?? "usuario",
+          userId: user.id,
+          text: comment.trim(),
+        },
+        ...prev,
+      ]);
+      setComment("");
     } catch (err) {
       console.error("❌ error al guardar comentario:", err);
     }
   };
 
+  // ========================
+  // editar comentario
+  // ========================
+  const handleEditComment = async (commentId: string) => {
+    if (!editedText.trim() || !user?.id) return;
+
+    try {
+      await api.put(`/comments/${commentId}`, {
+        userId: user.id,
+        content: editedText.trim(),
+      });
+
+      setComments((prev) =>
+        prev.map((c) => (c.id === commentId ? { ...c, text: editedText.trim() } : c))
+      );
+      setEditingCommentId(null);
+      setEditedText("");
+    } catch (err) {
+      console.error("❌ error al editar comentario:", err);
+    }
+  };
+
+  // ========================
+  // eliminar comentario
+  // ========================
+  const handleDeleteComment = async (commentId: string) => {
+    if (!user?.id) return;
+
+    try {
+      await api.delete(`/comments/${commentId}`, { data: { userId: user.id } });
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (err) {
+      console.error("❌ error al eliminar comentario:", err);
+    }
+  };
+
+  // ========================
+  // calificación
+  // ========================
   const handleRate = async (value: number) => {
     setRating(value);
     try {
-      await api.post("/ratings", {
+      const res = await api.post("/ratings", {
         userId: user?.id,
         movieExternalId: movie.id,
         rating: value,
         title: movie.title,
         posterUrl: movie.image,
       });
+
+      if (res.data?.promedioActualizado) {
+        setMovieAverageRating(res.data.promedioActualizado);
+      } else {
+        const avgRes = await api.get(`/${movie.id}/rating`, { params: { userId: user?.id } });
+        if (avgRes.data?.promedio) setMovieAverageRating(avgRes.data.promedio);
+      }
     } catch (err) {
       console.error("❌ error al guardar calificación:", err);
     }
   };
 
+  // ========================
+  // render
+  // ========================
   return (
     <div className="movie-detail">
       <button className="back-btn" onClick={() => navigate("/dashboard")}>
@@ -105,11 +175,8 @@ export default function MovieDetail() {
       <div className="video-section">
         <h2 className="movie-title">{movie.title}</h2>
 
-        {/* video con subtítulos */}
         <video className="movie-player" controls poster={movie.image}>
           <source src={videoLink} type="video/mp4" />
-
-          {/* subtítulos */}
           <track
             label="Español"
             kind="subtitles"
@@ -123,7 +190,6 @@ export default function MovieDetail() {
             srcLang="en"
             src={`/subtitles/${movie.id}_en.vtt`}
           />
-
           tu navegador no soporta la reproducción de video.
         </video>
       </div>
@@ -134,7 +200,7 @@ export default function MovieDetail() {
           <div className="stars">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
-                key={star}
+                key={`star-${star}`}
                 className={`star ${rating && rating >= star ? "filled" : ""}`}
                 onClick={() => handleRate(star)}
               >
@@ -143,7 +209,6 @@ export default function MovieDetail() {
             ))}
           </div>
 
-          {/* promedio de la película */}
           {movieAverageRating !== null && (
             <div className="average-rating">
               <span className="average-number">{movieAverageRating.toFixed(1)}</span>
@@ -170,10 +235,46 @@ export default function MovieDetail() {
           {comments.length === 0 ? (
             <p className="no-comments">sé el primero en comentar</p>
           ) : (
-            comments.map((c, index) => (
-              <div className="comment" key={index}>
-                <strong>{c.user}:</strong>
-                <p>{c.text}</p>
+            comments.map((c) => (
+              <div className="comment" key={`comment-${c.id}`}>
+                <div className="comment-header">
+                  <strong>{c.user}:</strong>
+                  {c.userId === user?.id && (
+                    <div
+                      className="menu-icon"
+                      onClick={() => setMenuOpenId(menuOpenId === c.id ? null : c.id)}
+                    >
+                      ⋮
+                      {menuOpenId === c.id && (
+                        <div className="menu-dropdown">
+                          <button
+                            onClick={() => {
+                              setEditingCommentId(c.id);
+                              setEditedText(c.text);
+                              setMenuOpenId(null);
+                            }}
+                          >
+                            editar
+                          </button>
+                          <button onClick={() => handleDeleteComment(c.id)}>eliminar</button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {editingCommentId === c.id ? (
+                  <div className="edit-section">
+                    <textarea
+                      value={editedText}
+                      onChange={(e) => setEditedText(e.target.value)}
+                    />
+                    <button onClick={() => handleEditComment(c.id)}>guardar</button>
+                    <button onClick={() => setEditingCommentId(null)}>cancelar</button>
+                  </div>
+                ) : (
+                  <p>{c.text}</p>
+                )}
               </div>
             ))
           )}
