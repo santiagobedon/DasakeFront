@@ -20,6 +20,7 @@ export default function MovieDetail() {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
+  const [movieAverageRating, setMovieAverageRating] = useState<number | null>(null);
 
   if (!movie) {
     return (
@@ -38,12 +39,19 @@ export default function MovieDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // comentarios
         const commentsRes = await api.get(`/${movie.id}/comments`);
         setComments(commentsRes.data);
 
+        // calificación usuario y promedio
         const ratingRes = await api.get(`/${movie.id}/rating`, { params: { userId: user?.id } });
-        if (ratingRes.data && ratingRes.data.userRating) {
+
+        if (ratingRes.data && ratingRes.data.userRating !== null) {
           setRating(ratingRes.data.userRating);
+        }
+
+        if (ratingRes.data && ratingRes.data.promedio !== undefined) {
+          setMovieAverageRating(ratingRes.data.promedio);
         }
       } catch (err) {
         console.error("❌ error al cargar datos de la película:", err);
@@ -96,8 +104,26 @@ export default function MovieDetail() {
 
       <div className="video-section">
         <h2 className="movie-title">{movie.title}</h2>
+
+        {/* video con subtítulos */}
         <video className="movie-player" controls poster={movie.image}>
           <source src={videoLink} type="video/mp4" />
+
+          {/* subtítulos */}
+          <track
+            label="Español"
+            kind="subtitles"
+            srcLang="es"
+            src={`/subtitles/${movie.id}_es.vtt`}
+            default
+          />
+          <track
+            label="Inglés"
+            kind="subtitles"
+            srcLang="en"
+            src={`/subtitles/${movie.id}_en.vtt`}
+          />
+
           tu navegador no soporta la reproducción de video.
         </video>
       </div>
@@ -116,6 +142,19 @@ export default function MovieDetail() {
               </span>
             ))}
           </div>
+
+          {/* promedio de la película */}
+          {movieAverageRating !== null && (
+            <div className="average-rating">
+              <span className="average-number">{movieAverageRating.toFixed(1)}</span>
+              <div className="progress-bar">
+                <div
+                  className="fill"
+                  style={{ width: `${(movieAverageRating / 5) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="comment-input-section">
@@ -127,7 +166,6 @@ export default function MovieDetail() {
           <button onClick={handleSubmitComment}>publicar</button>
         </div>
 
-        {/* 🔹 nuevo contenedor con scroll para los comentarios */}
         <div className="comments-container">
           {comments.length === 0 ? (
             <p className="no-comments">sé el primero en comentar</p>
