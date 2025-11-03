@@ -22,13 +22,6 @@ interface Movie {
 
 type GroupedMovies = Record<string, Movie[]>;
 
-/**
- * Dashboard page
- *
- * Displays movies grouped by category.
- * Allows the user to view, filter by category, and mark favorites.
- * Includes a dropdown menu for navigation and logout.
- */
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -64,12 +57,11 @@ export default function Dashboard() {
     navigate("/profile");
   };
 
-  // fetch movies from API
+  // obtener películas
   useEffect(() => {
     async function fetchMovies() {
       try {
         const res = await api.get("/movies");
-
         if (Array.isArray(res.data)) {
           const grouped = res.data.reduce((acc: Record<string, Movie[]>, movie: Movie) => {
             const cat = movie.category ?? "otros";
@@ -88,7 +80,7 @@ export default function Dashboard() {
     fetchMovies();
   }, []);
 
-  // fetch user favorites
+  // obtener favoritos
   useEffect(() => {
     const userId = user?.id;
     if (!userId) return;
@@ -102,7 +94,6 @@ export default function Dashboard() {
         console.error("❌ error al obtener favoritos:", err);
       }
     }
-
     fetchFavorites();
   }, [user]);
 
@@ -140,7 +131,7 @@ export default function Dashboard() {
     setShowCategories(false);
   };
 
-  // handle clicks outside menu to close it
+  // cerrar menú si se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -175,9 +166,10 @@ export default function Dashboard() {
     <div className="main-content">
       <div className="dash-page">
         <div className="movies-container">
+          {/* encabezado */}
           <div className="header-row">
             <div className="user-info">
-              <div className="avatar" aria-label="perfil de usuario" onClick={goToProfile}>
+              <div className="avatar" onClick={goToProfile}>
                 {user?.firstName?.[0]?.toUpperCase() ?? "U"}
               </div>
               <h2>bienvenido, {user?.firstName ?? "usuario"}</h2>
@@ -240,38 +232,46 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="movies-scroll" role="region" aria-label="contenedor de películas">
+
+          {/* contenedor principal de películas */}
+          <div className="movies-scroll">
             {Object.keys(displayedGroups).length === 0 ? (
               <div className="movies-placeholder">
-                <p role="alert" aria-live="polite">
-                  Cargando películas...
-                </p>
+                <p>cargando películas...</p>
               </div>
             ) : (
               Object.entries(displayedGroups).map(([cat, catMovies]) => (
                 <section className="category-section" key={cat}>
                   <h3 className="category-title">{cat}</h3>
-                  <div className="movies-row" tabIndex={0}>
+                  <div className="movies-row">
                     {catMovies.map((movie) => {
                       const videoLink =
                         movie.video_files?.find(
-                          (file) => file.quality === "hd" || file.quality === "sd"
+                          (f) => f.quality === "hd" || f.quality === "sd"
                         )?.link ?? movie.url ?? "";
 
                       const isFav = favorites.includes(movie.id);
 
                       return (
-                        <div key={movie.id} className="movie-card">
+                        <div
+                          key={movie.id}
+                          className="movie-card"
+                          onClick={() => navigate(`/movie/${movie.id}`, { state: { movie } })}
+                          style={{ cursor: "pointer" }}
+                        >
                           <video className="movie-video" controls poster={movie.image}>
                             {videoLink && <source src={videoLink} type="video/mp4" />}
-                            Tu navegador no soporta la reproducción de video.
+                            tu navegador no soporta la reproducción de video.
                           </video>
 
                           <div className="movie-info">
                             <h4>{movie.user?.name ?? "autor desconocido"}</h4>
                             <button
                               className={`favorite-btn ${isFav ? "favorited" : ""}`}
-                              onClick={() => toggleFavorite(movie)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(movie);
+                              }}
                             >
                               {isFav ? "❤️" : "🤍"}
                             </button>

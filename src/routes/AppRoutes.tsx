@@ -9,7 +9,7 @@ import EditProfile from "../pages/Profile/EditProfile";
 import AboutUs from "../pages/aboutus/AboutUs"; // About Us page
 import ProtectedRoute from "../components/ProtectedRoute";
 import ChangePassword from "../pages/Change-password/Change-Password";
-
+import MovieDetail from "../pages/MovieDetail/MovieDetail";
 /**
  * AppRoutes component
  *
@@ -67,9 +67,19 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      {/* Movie Detail page */}
+      <Route
+        path="/movie/:id"
+        element={
+          <ProtectedRoute>
+            <MovieDetail />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Catch-all redirects unknown routes to login */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    
   );
 }
