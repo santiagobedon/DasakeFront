@@ -41,13 +41,9 @@ export default function MovieDetail() {
     movie.url ??
     "";
 
-  // ========================
-  // carga inicial
-  // ========================
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // comentarios
         const commentsRes = await api.get(`/${movie.id}/comments`);
         const formattedComments = commentsRes.data.map((c: any) => ({
           id: c.id,
@@ -57,35 +53,29 @@ export default function MovieDetail() {
         }));
         setComments(formattedComments);
 
-        // calificaciones
         const ratingRes = await api.get(`/${movie.id}/rating`, { params: { userId: user?.id } });
         if (ratingRes.data) {
           if (ratingRes.data.userRating !== null) setRating(ratingRes.data.userRating);
           if (ratingRes.data.promedio !== undefined) setMovieAverageRating(ratingRes.data.promedio);
         }
-      } catch (err) {
-        console.error("❌ error al cargar datos de la película:", err);
-      }
+      } catch {}
     };
 
     fetchData();
   }, [movie, user?.id]);
 
-  // ========================
-  // publicar comentario
-  // ========================
   const handleSubmitComment = async () => {
     if (!comment.trim() || !user?.id) return;
-
     try {
-      const res = await api.post("/comments", {
+      const payload = {
         userId: user.id,
         movieExternalId: movie.id,
         content: comment.trim(),
         title: movie.title,
         posterUrl: movie.image,
-      });
+      };
 
+      const res = await api.post("/comments", payload);
       const newComment = res.data.data?.[0];
       setComments((prev) => [
         {
@@ -97,17 +87,11 @@ export default function MovieDetail() {
         ...prev,
       ]);
       setComment("");
-    } catch (err) {
-      console.error("❌ error al guardar comentario:", err);
-    }
+    } catch {}
   };
 
-  // ========================
-  // editar comentario
-  // ========================
   const handleEditComment = async (commentId: string) => {
     if (!editedText.trim() || !user?.id) return;
-
     try {
       await api.put(`/comments/${commentId}`, {
         userId: user.id,
@@ -119,28 +103,17 @@ export default function MovieDetail() {
       );
       setEditingCommentId(null);
       setEditedText("");
-    } catch (err) {
-      console.error("❌ error al editar comentario:", err);
-    }
+    } catch {}
   };
 
-  // ========================
-  // eliminar comentario
-  // ========================
   const handleDeleteComment = async (commentId: string) => {
     if (!user?.id) return;
-
     try {
       await api.delete(`/comments/${commentId}`, { data: { userId: user.id } });
       setComments((prev) => prev.filter((c) => c.id !== commentId));
-    } catch (err) {
-      console.error("❌ error al eliminar comentario:", err);
-    }
+    } catch {}
   };
 
-  // ========================
-  // calificación
-  // ========================
   const handleRate = async (value: number) => {
     setRating(value);
     try {
@@ -158,14 +131,9 @@ export default function MovieDetail() {
         const avgRes = await api.get(`/${movie.id}/rating`, { params: { userId: user?.id } });
         if (avgRes.data?.promedio) setMovieAverageRating(avgRes.data.promedio);
       }
-    } catch (err) {
-      console.error("❌ error al guardar calificación:", err);
-    }
+    } catch {}
   };
 
-  // ========================
-  // render
-  // ========================
   return (
     <div className="movie-detail">
       <button className="back-btn" onClick={() => navigate("/dashboard")}>
